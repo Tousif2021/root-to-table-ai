@@ -1,14 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '@/components/ui/carousel';
 import FarmCard from '@/components/FarmCard';
+import InteractiveMap, { Farm } from '@/components/InteractiveMap';
+import ChatInterface from '@/components/ChatInterface';
 import { Sprout, MapPin, Leaf, Users } from 'lucide-react';
 import heroImage from '@/assets/hero-produce.jpg';
+import { mockFarms } from '@/data/farmData';
 const Index = () => {
-  // Mock data for demonstration
-  const farms = [{
+  const [highlightedFarms, setHighlightedFarms] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [selectedFarm, setSelectedFarm] = useState<Farm | null>(null);
+
+  // Mock data for demonstration - legacy farm cards
+  const legacyFarms = [{
     name: "Anna's Organic Farm",
     distance: "12km away",
     rating: 4.9,
@@ -33,6 +40,18 @@ const Index = () => {
     sustainability: "medium" as const,
     description: "Traditional orchard focusing on heritage varieties and sustainable growing practices."
   }];
+
+  const handleFarmsHighlight = (farmIds: string[]) => {
+    setHighlightedFarms(farmIds);
+  };
+
+  const handleSearchQuery = (query: string) => {
+    setSearchQuery(query);
+  };
+
+  const handleFarmSelect = (farm: Farm) => {
+    setSelectedFarm(farm);
+  };
   return <div>
       {/* Hero Section */}
       <section className="relative h-[60vh] overflow-hidden">
@@ -104,12 +123,41 @@ const Index = () => {
           </Card>
         </div>
 
+        {/* Interactive Map & AI Assistant */}
+        <div className="space-y-8">
+          <div className="text-center space-y-4">
+            <h2 className="text-3xl font-bold text-foreground">Find Farms Near You</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Use our AI assistant to find exactly what you need. Tell it what produce you want, 
+              and watch the map highlight matching farms in real-time.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <InteractiveMap
+                farms={mockFarms}
+                highlightedFarms={highlightedFarms}
+                onFarmSelect={handleFarmSelect}
+                searchQuery={searchQuery}
+              />
+            </div>
+            <div className="lg:col-span-1">
+              <ChatInterface
+                onFarmsHighlight={handleFarmsHighlight}
+                onSearchQuery={handleSearchQuery}
+                selectedFarm={selectedFarm}
+              />
+            </div>
+          </div>
+        </div>
+
         {/* Local Farms Carousel */}
         <div>
-          <h2 className="text-3xl font-bold text-foreground mb-8 text-center">Local Farms Near You</h2>
+          <h2 className="text-3xl font-bold text-foreground mb-8 text-center">Featured Local Farms</h2>
           <Carousel className="max-w-5xl mx-auto">
             <CarouselContent className="-ml-2 md:-ml-4">
-              {farms.map((farm, index) => <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+              {legacyFarms.map((farm, index) => <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
                   <FarmCard {...farm} />
                 </CarouselItem>)}
             </CarouselContent>

@@ -1,51 +1,89 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Send, User, Bot } from 'lucide-react';
+import { Send, User, Bot, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAIAssistant } from '@/hooks/useAIAssistant';
+import { Farm } from './InteractiveMap';
 
 interface Message {
   id: string;
   text: string;
   isUser: boolean;
   timestamp: Date;
+  suggestedFarms?: string[];
+  searchQuery?: string;
 }
 
-const ChatInterface = () => {
+interface ChatInterfaceProps {
+  onFarmsHighlight: (farmIds: string[]) => void;
+  onSearchQuery: (query: string) => void;
+  selectedFarm?: Farm | null;
+}
+
+const ChatInterface: React.FC<ChatInterfaceProps> = ({ 
+  onFarmsHighlight, 
+  onSearchQuery,
+  selectedFarm 
+}) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: "Hello! I'm here to help you find fresh, local produce. What would you like to order today? Try saying something like 'I need 2kg strawberries and 1kg potatoes'",
+      text: "Hello! I'm your Rooted AI assistant 🌱 I'll help you find fresh, local produce from nearby farms. Try saying something like:\n\n• 'I need 2kg strawberries'\n• 'Organic spinach and potatoes'\n• 'Cheapest tomatoes for delivery'\n\nWhat would you like to order today?",
       isUser: false,
       timestamp: new Date()
     }
   ]);
   const [inputValue, setInputValue] = useState('');
+  const { generateResponse, isProcessing } = useAIAssistant();
 
-  const handleSend = () => {
-    if (!inputValue.trim()) return;
+  const handleSend = async () => {
+    if (!inputValue.trim() || isProcessing) return;
 
-    const newMessage: Message = {
+    const userMessage: Message = {
       id: Date.now().toString(),
       text: inputValue,
       isUser: true,
       timestamp: new Date()
     };
 
-    setMessages(prev => [...prev, newMessage]);
+    setMessages(prev => [...prev, userMessage]);
+    const currentInput = inputValue;
     setInputValue('');
 
-    // Simulate AI response
-    setTimeout(() => {
-      const aiResponse: Message = {
+    try {
+      const aiResponse = await generateResponse(currentInput);
+      
+      const responseMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: "Great! I found several local farms with fresh strawberries and potatoes. Anna's Farm (12km away) has organic strawberries available for pickup tomorrow. Would you like me to check availability and pricing?",
+        text: aiResponse.text,
+        isUser: false,
+        timestamp: new Date(),
+        suggestedFarms: aiResponse.suggestedFarms,
+        searchQuery: aiResponse.searchQuery
+      };
+
+      setMessages(prev => [...prev, responseMessage]);
+      
+      // Highlight farms on map
+      if (aiResponse.suggestedFarms && aiResponse.suggestedFarms.length > 0) {
+        onFarmsHighlight(aiResponse.suggestedFarms);
+      }
+      
+      // Update search query
+      if (aiResponse.searchQuery) {
+        onSearchQuery(aiResponse.searchQuery);
+      }
+    } catch (error) {
+      const errorMessage: Message = {
+        id: (Date.now() + 2).toString(),
+        text: "Sorry, I encountered an error. Please try again!",
         isUser: false,
         timestamp: new Date()
       };
-      setMessages(prev => [...prev, aiResponse]);
-    }, 1000);
+      setMessages(prev => [...prev, errorMessage]);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -54,6 +92,19 @@ const ChatInterface = () => {
       handleSend();
     }
   };
+
+  // Add message when a farm is selected
+  useEffect(() => {
+    if (selectedFarm) {
+      const farmSelectedMessage: Message = {
+        id: `farm-selected-${Date.now()}`,
+        text: `Great choice! You've selected ${selectedFarm.name}. I can see they have excellent produce available. Would you like to:\n\n• Check their pickup times: ${selectedFarm.pickupTimes.join(', ')}\n• ${selectedFarm.deliveryAvailable ? 'Arrange delivery' : 'Plan a pickup'}\n• See their full produce catalog\n\nWhat would you like to do next?`,
+        isUser: false,
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, farmSelectedMessage]);
+    }
+  }, [selectedFarm]);
 
   return (
     <Card className="flex flex-col h-[600px] bg-card shadow-soft">
@@ -92,7 +143,7 @@ const ChatInterface = () => {
                   : "bg-secondary text-secondary-foreground"
               )}
             >
-              <p className="text-sm leading-relaxed">{message.text}</p>
+              <div className="text-sm leading-relaxed whitespace-pre-line">{message.text}</div>
               <p className="text-xs opacity-70 mt-1">
                 {message.timestamp.toLocaleTimeString([], { 
                   hour: '2-digit', 
@@ -115,11 +166,15 @@ const ChatInterface = () => {
           />
           <Button 
             onClick={handleSend}
-            disabled={!inputValue.trim()}
+            disabled={!inputValue.trim() || isProcessing}
             size="sm"
             className="bg-primary hover:bg-primary-glow transition-spring"
           >
-            <Send className="w-4 h-4" />
+            {isProcessing ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Send className="w-4 h-4" />
+            )}
           </Button>
         </div>
       </div>

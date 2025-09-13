@@ -152,7 +152,10 @@ const FarmOrder = () => {
             {/* AI Chat Interface */}
             <div>
               <h2 className="text-2xl font-bold text-foreground mb-4">Order with AI Assistant</h2>
-              <ChatInterface />
+              <ChatInterface 
+                onFarmsHighlight={() => {}} // No-op for single farm page
+                onSearchQuery={() => {}} // No-op for single farm page
+              />
             </div>
           </div>
 
