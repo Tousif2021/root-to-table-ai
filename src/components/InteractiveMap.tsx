@@ -141,6 +141,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
         <div className="bg-white/10 backdrop-blur-md border-2 border-green-600 rounded-full px-8 py-3 shadow-soft min-w-[400px]">
           <div className="flex items-center gap-3">
+            <Search className="w-5 h-5 text-green-600" />
             <Input
               type="text"
               placeholder="Search for produce (e.g. strawberries, carrots...)"
