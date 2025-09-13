@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Home, Tractor, ShoppingCart, User, Sprout } from 'lucide-react';
@@ -29,7 +30,7 @@ const Navbar = () => {
           </Link>
 
           {/* Navigation Links */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center relative bg-background/60 backdrop-blur-lg rounded-full p-1.5 border border-border/50 shadow-lg">
             {navItems.map((item) => {
               const Icon = item.icon;
               const active = isActive(item.path);
@@ -38,22 +39,50 @@ const Navbar = () => {
                 <Link
                   key={item.name}
                   to={item.path}
-                  className={`flex items-center gap-2 text-sm font-medium transition-smooth py-2 px-1 relative group ${
-                    active 
-                      ? 'text-primary' 
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
+                  className="relative z-10 flex items-center gap-2 px-4 py-2.5 text-sm font-medium transition-all duration-300 rounded-full group"
                 >
-                  <Icon className="w-4 h-4" />
-                  {item.name}
-                  {item.name === 'Cart' && (
-                    <Badge variant="secondary" className="ml-1 bg-primary text-primary-foreground text-xs min-w-5 h-5">
-                      0
-                    </Badge>
-                  )}
                   {active && (
-                    <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full" />
+                    <motion.div
+                      layoutId="tubelight-indicator"
+                      className="absolute inset-0 bg-primary/20 backdrop-blur-sm rounded-full shadow-lg"
+                      style={{
+                        boxShadow: '0 0 20px hsl(var(--primary) / 0.3), inset 0 1px 0 hsl(var(--primary) / 0.2)'
+                      }}
+                      transition={{
+                        type: "spring",
+                        bounce: 0.2,
+                        duration: 0.6
+                      }}
+                    />
                   )}
+                  <motion.div
+                    className="flex items-center gap-2"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Icon className={`w-4 h-4 transition-colors ${
+                      active ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'
+                    }`} />
+                    <span className={`transition-colors ${
+                      active ? 'text-primary font-semibold' : 'text-muted-foreground group-hover:text-foreground'
+                    }`}>
+                      {item.name}
+                    </span>
+                    {item.name === 'Cart' && (
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className="relative"
+                      >
+                        <Badge 
+                          variant="secondary" 
+                          className="ml-1 bg-primary text-primary-foreground text-xs min-w-5 h-5 shadow-md"
+                        >
+                          0
+                        </Badge>
+                      </motion.div>
+                    )}
+                  </motion.div>
                 </Link>
               );
             })}
@@ -70,30 +99,60 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Navigation */}
-        <div className="md:hidden border-t border-border">
-          <div className="flex items-center justify-around py-2">
+        <div className="md:hidden border-t border-border/30 bg-background/60 backdrop-blur-lg">
+          <div className="flex items-center justify-around py-3 mx-3 my-2 bg-background/40 rounded-2xl border border-border/30">
             {navItems.map((item) => {
               const Icon = item.icon;
               const active = isActive(item.path);
               
               return (
-                <Button
+                <motion.div
                   key={item.name}
-                  asChild
-                  variant="ghost"
-                  size="sm"
-                  className={`flex flex-col items-center gap-1 p-2 ${active ? 'text-primary' : 'text-muted-foreground'}`}
+                  className="relative flex-1 flex justify-center"
+                  whileTap={{ scale: 0.9 }}
                 >
-                  <Link to={item.path}>
-                    <Icon className="w-4 h-4" />
-                    <span className="text-xs">{item.name}</span>
+                  {active && (
+                    <motion.div
+                      layoutId="mobile-tubelight-indicator"
+                      className="absolute inset-0 bg-primary/15 rounded-xl mx-1"
+                      style={{
+                        boxShadow: '0 0 15px hsl(var(--primary) / 0.2)'
+                      }}
+                      transition={{
+                        type: "spring",
+                        bounce: 0.2,
+                        duration: 0.6
+                      }}
+                    />
+                  )}
+                  <Link
+                    to={item.path}
+                    className="relative z-10 flex flex-col items-center gap-1 p-3 rounded-xl transition-all duration-200"
+                  >
+                    <Icon className={`w-5 h-5 transition-colors ${
+                      active ? 'text-primary' : 'text-muted-foreground'
+                    }`} />
+                    <span className={`text-xs transition-colors ${
+                      active ? 'text-primary font-medium' : 'text-muted-foreground'
+                    }`}>
+                      {item.name}
+                    </span>
                     {item.name === 'Cart' && (
-                      <Badge variant="secondary" className="absolute -top-1 -right-1 bg-primary text-primary-foreground min-w-5 h-5 text-xs">
-                        0
-                      </Badge>
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className="absolute -top-1 -right-1"
+                      >
+                        <Badge 
+                          variant="secondary" 
+                          className="bg-primary text-primary-foreground min-w-5 h-5 text-xs shadow-lg"
+                        >
+                          0
+                        </Badge>
+                      </motion.div>
                     )}
                   </Link>
-                </Button>
+                </motion.div>
               );
             })}
           </div>
