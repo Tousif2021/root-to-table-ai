@@ -190,10 +190,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             </div>
           </div>
         ) : (
-          <div className="h-full flex items-center justify-center">
-            <div className="text-center space-y-4">
-              <MessageCircle className="w-12 h-12 text-muted-foreground/50 mx-auto" />
-              <p className="text-muted-foreground">Start a conversation with your AI farm assistant</p>
+          <div className="flex items-end justify-center pb-8">
+            <div className="text-center space-y-3">
+              <MessageCircle className="w-8 h-8 text-muted-foreground/40 mx-auto" />
+              <p className="text-sm text-muted-foreground/70">Ask me about farms, produce, or seasonal recommendations</p>
+              <p className="text-xs text-muted-foreground/50">Your conversation will appear above</p>
             </div>
           </div>
         )}
