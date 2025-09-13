@@ -38,7 +38,7 @@ const Index = () => {
         
         <div className="relative z-10 flex flex-col justify-center items-center h-full text-center text-white px-4">
           <h1 className="font-baskerville text-5xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight tracking-wide">
-            EAT WITH THE SEASON
+            EAT WITH THE SEASONS
           </h1>
           
           <div className="flex items-center gap-6 md:gap-8 text-lg md:text-xl lg:text-2xl font-light tracking-widest">
