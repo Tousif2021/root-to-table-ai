@@ -13,6 +13,10 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        'baskerville': ['Libre Baskerville', 'serif'],
+        'sans': ['Libre Baskerville', 'serif'], // Make Baskerville default
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

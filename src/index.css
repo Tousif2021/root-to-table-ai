@@ -2,56 +2,58 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Rooted Design System - Connecting consumers with local farmers
+/* Rooted Design System - Premium farm marketplace inspired by Natoora
 All colors MUST be HSL for proper theming
 */
 
 @layer base {
   :root {
-    /* Core brand colors - Fresh and earthy */
-    --background: 35 25% 97%; /* Warm cream */
-    --foreground: 25 15% 15%; /* Dark earth brown */
+    /* Core brand colors - Premium, minimal, sophisticated */
+    --background: 0 0% 99%; /* Pure off-white */
+    --foreground: 0 0% 15%; /* Deep charcoal */
 
     --card: 0 0% 100%; /* Pure white for cards */
-    --card-foreground: 25 15% 15%;
+    --card-foreground: 0 0% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 25 15% 15%;
+    --popover-foreground: 0 0% 15%;
 
-    /* Primary - Sophisticated forest green inspired by Natoora */
-    --primary: 145 50% 42%; /* Deeper forest green */
+    /* Primary - Deep forest green inspired by Natoora */
+    --primary: 158 42% 28%; /* Deep forest green */
     --primary-foreground: 0 0% 98%;
-    --primary-glow: 145 50% 52%;
+    --primary-glow: 158 42% 35%;
 
-    /* Secondary - Warmer earth tones inspired by Natoora */
-    --secondary: 35 35% 88%; /* Warmer light earth */
-    --secondary-foreground: 35 45% 22%;
-    --secondary-dark: 35 45% 22%;
+    /* Secondary - Sophisticated neutral grays */
+    --secondary: 0 0% 95%; /* Light gray */
+    --secondary-foreground: 0 0% 25%;
+    --secondary-dark: 0 0% 20%;
 
-    /* Muted earth tones */
-    --muted: 35 20% 92%; /* Soft cream */
-    --muted-foreground: 25 25% 45%;
+    /* Muted neutrals */
+    --muted: 0 0% 97%; /* Very light gray */
+    --muted-foreground: 0 0% 45%;
 
-    /* Accent - Sophisticated olive/sage inspired by Natoora */
-    --accent: 82 25% 55%; /* Warm sage green */
-    --accent-foreground: 0 0% 98%;
+    /* Accent - Sophisticated sage inspired by Natoora */
+    --accent: 120 15% 85%; /* Subtle sage */
+    --accent-foreground: 0 0% 15%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 70% 55%;
     --destructive-foreground: 0 0% 98%;
 
-    /* Borders and inputs - Soft and natural */
-    --border: 35 15% 85%; /* Soft earth border */
-    --input: 35 15% 90%;
-    --ring: 142 71% 45%; /* Green focus ring */
+    /* Borders and inputs - Minimal and clean */
+    --border: 0 0% 88%; /* Light gray border */
+    --input: 0 0% 94%;
+    --ring: 158 42% 35%; /* Green focus ring */
 
-    /* Gradients */
+    /* Gradients - Subtle and sophisticated */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
     --gradient-earth: linear-gradient(135deg, hsl(var(--secondary-dark)), hsl(var(--accent)));
     --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary) / 0.95), hsl(var(--primary-glow) / 0.9));
 
-    /* Shadows with green tint */
-    --shadow-soft: 0 4px 20px -4px hsl(var(--primary) / 0.1);
-    --shadow-glow: 0 8px 32px -8px hsl(var(--primary) / 0.2);
+    /* Shadows - Subtle and elegant */
+    --shadow-soft: 0 2px 12px -2px hsl(0 0% 0% / 0.08);
+    --shadow-medium: 0 4px 24px -4px hsl(0 0% 0% / 0.12);
+    --shadow-glow: 0 8px 32px -8px hsl(var(--primary) / 0.15);
 
     /* Animation timings */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -77,37 +79,37 @@ All colors MUST be HSL for proper theming
   }
 
   .dark {
-    /* Dark mode - Keeping the natural earth theme */
-    --background: 25 15% 8%; /* Dark earth brown */
-    --foreground: 35 25% 95%; /* Warm cream text */
+    /* Dark mode - Premium and sophisticated */
+    --background: 0 0% 8%; /* Deep charcoal */
+    --foreground: 0 0% 95%; /* Light gray text */
 
-    --card: 25 15% 12%; /* Darker cards */
-    --card-foreground: 35 25% 95%;
+    --card: 0 0% 12%; /* Darker cards */
+    --card-foreground: 0 0% 95%;
 
-    --popover: 25 15% 12%;
-    --popover-foreground: 35 25% 95%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 95%;
 
-    /* Primary - Lighter forest green for dark mode contrast */
-    --primary: 145 50% 52%;
-    --primary-foreground: 25 15% 8%;
+    /* Primary - Brighter forest green for dark mode contrast */
+    --primary: 158 42% 45%;
+    --primary-foreground: 0 0% 8%;
 
-    /* Secondary - Darker earth tones */
-    --secondary: 25 25% 18%;
-    --secondary-foreground: 35 25% 85%;
+    /* Secondary - Sophisticated dark grays */
+    --secondary: 0 0% 18%;
+    --secondary-foreground: 0 0% 85%;
 
-    --muted: 25 20% 15%;
-    --muted-foreground: 35 15% 65%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 65%;
 
-    /* Accent - Warmer sage in dark mode */
-    --accent: 82 25% 65%;
-    --accent-foreground: 25 15% 8%;
+    /* Accent - Lighter sage in dark mode */
+    --accent: 120 15% 75%;
+    --accent-foreground: 0 0% 8%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 70% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 25 15% 20%;
-    --input: 25 15% 18%;
-    --ring: 142 71% 55%;
+    --border: 0 0% 20%;
+    --input: 0 0% 18%;
+    --ring: 158 42% 45%;
   }
 }
 
@@ -117,9 +119,12 @@ All colors MUST be HSL for proper theming
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-baskerville;
     background: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
     min-height: 100vh;
+    font-feature-settings: "liga" 1, "kern" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
@@ -132,8 +137,16 @@ All colors MUST be HSL for proper theming
     background: var(--gradient-earth);
   }
   
+  .bg-gradient-hero {
+    background: var(--gradient-hero);
+  }
+  
   .shadow-soft {
     box-shadow: var(--shadow-soft);
+  }
+  
+  .shadow-medium {
+    box-shadow: var(--shadow-medium);
   }
   
   .shadow-glow {
@@ -146,5 +159,11 @@ All colors MUST be HSL for proper theming
   
   .transition-spring {
     transition: var(--transition-spring);
+  }
+
+  /* Typography utilities */
+  .text-elegant {
+    font-feature-settings: "liga" 1, "kern" 1, "swsh" 1;
+    letter-spacing: -0.01em;
   }
 }
