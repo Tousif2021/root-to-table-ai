@@ -76,31 +76,17 @@ const Index = () => {
         {/* Premium AI Assistant Section */}
         <div className="space-y-12">
           <div className="text-center space-y-6">
-            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-primary/5 border border-primary/10">
-              <div className="w-8 h-8 rounded-full bg-white shadow-soft flex items-center justify-center">
-                <Bot className="w-4 h-4 text-primary" />
-              </div>
-              <span className="text-sm font-medium text-primary">AI-Powered Farm Discovery</span>
-            </div>
-            
             <h2 className="font-baskerville text-4xl md:text-5xl font-bold text-foreground leading-tight">
-              Meet Your Personal
-              <span className="block text-primary">Farm Assistant</span>
+              Meet Your Personal Farm AI Assistant
             </h2>
-            
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-light">
-              Simply tell me what you need, and I'll find the perfect local farms with fresh, seasonal produce just for you.
-            </p>
           </div>
           
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-3xl shadow-medium border border-border/20 overflow-hidden">
-              <ChatInterface
-                onFarmsHighlight={setHighlightedFarms}
-                onSearchQuery={setSearchQuery}
-                selectedFarm={selectedFarm}
-              />
-            </div>
+          <div className="w-full">
+            <ChatInterface
+              onFarmsHighlight={setHighlightedFarms}
+              onSearchQuery={setSearchQuery}
+              selectedFarm={selectedFarm}
+            />
           </div>
         </div>
 

@@ -8,6 +8,13 @@ import { Farm } from '@/types/farm';
 import { useNavigate } from 'react-router-dom';
 import { mockFarms } from '@/data/farmData';
 
+interface Message {
+  type: 'user' | 'ai' | 'farms';
+  content: string;
+  timestamp: Date;
+  suggestedFarms?: string[];
+}
+
 interface ChatInterfaceProps {
   onFarmsHighlight: (farmIds: string[]) => void;
   onSearchQuery: (query: string) => void;
@@ -20,9 +27,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   selectedFarm 
 }) => {
   const [inputValue, setInputValue] = useState('');
-  const [lastResponse, setLastResponse] = useState<string>('');
+  const [messages, setMessages] = useState<Message[]>([]);
   const [hasAskedQuestion, setHasAskedQuestion] = useState(false);
-  const [suggestedFarms, setSuggestedFarms] = useState<string[]>([]);
   const { generateResponse, isProcessing } = useAIAssistant();
   const navigate = useNavigate();
 
@@ -46,11 +52,25 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     setInputValue('');
     setHasAskedQuestion(true);
 
+    // Add user message to chat
+    const userMessage: Message = {
+      type: 'user',
+      content: currentInput,
+      timestamp: new Date()
+    };
+    setMessages(prev => [...prev, userMessage]);
+
     try {
       const aiResponse = await generateResponse(currentInput);
       
-      setLastResponse(aiResponse.text);
-      setSuggestedFarms(aiResponse.suggestedFarms || []);
+      // Add AI response to chat
+      const aiMessage: Message = {
+        type: 'ai',
+        content: aiResponse.text,
+        timestamp: new Date(),
+        suggestedFarms: aiResponse.suggestedFarms
+      };
+      setMessages(prev => [...prev, aiMessage]);
       
       // Highlight farms on map
       if (aiResponse.suggestedFarms && aiResponse.suggestedFarms.length > 0) {
@@ -62,7 +82,12 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         onSearchQuery(aiResponse.searchQuery);
       }
     } catch (error) {
-      setLastResponse("Sorry, I encountered an error. Please try again!");
+      const errorMessage: Message = {
+        type: 'ai',
+        content: "Sorry, I encountered an error. Please try again!",
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
     }
   };
 
@@ -73,24 +98,17 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     }
   };
 
-  const getSuggestedFarmDetails = () => {
-    return suggestedFarms.map(farmId => 
+  const getSuggestedFarmDetails = (farmIds: string[] = []) => {
+    return farmIds.map(farmId => 
       mockFarms.find(farm => farm.id === farmId)
     ).filter(Boolean) as Farm[];
   };
 
   return (
-    <div className="w-full">
-      {/* Minimal Header */}
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-foreground font-serif">
-          Meet Your Personal Farm AI Assistant
-        </h2>
-      </div>
-
-      {/* Collapsed Search Bar */}
-      <div className="w-full max-w-2xl mx-auto mb-8">
-        <div className="bg-white rounded-full border-2 border-gray-200 shadow-soft hover:border-green-400 transition-smooth">
+    <div className="w-full min-h-screen bg-white">
+      {/* Centered Search Bar - Always visible */}
+      <div className="w-full max-w-2xl mx-auto pt-20">
+        <div className="rounded-full border-2 border-green-500 hover:border-green-600 transition-all duration-300 focus-within:border-green-600 focus-within:shadow-lg">
           <div className="flex items-center gap-3 px-6 py-4">
             <div className="text-green-600 flex-shrink-0">
               <Search className="w-5 h-5" />
@@ -107,7 +125,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
               onClick={handleSend}
               disabled={!inputValue.trim() || isProcessing}
               size="icon"
-              className="rounded-full bg-green-600 hover:bg-green-700 text-white shadow-lg flex-shrink-0 disabled:opacity-50 transition-smooth"
+              className="rounded-full bg-green-600 hover:bg-green-700 text-white shadow-lg flex-shrink-0 disabled:opacity-50 transition-all duration-300"
             >
               {isProcessing ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
@@ -121,34 +139,48 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
 
       {/* Animated Response Container */}
       {hasAskedQuestion && (
-        <div className="w-full max-w-4xl mx-auto animate-fade-in">
-          <div className="bg-gradient-to-br from-white via-green-50 to-green-100 rounded-3xl p-8 shadow-medium border border-green-200">
+        <div className="w-full max-w-4xl mx-auto mt-8 animate-fade-in">
+          <div className="bg-gradient-to-br from-white via-green-50 to-emerald-50 rounded-3xl p-8 shadow-lg border border-green-200/50">
             
-            {/* AI Response */}
-            {lastResponse && (
-              <div className="mb-6">
-                <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 border border-green-200 shadow-soft">
-                  <div className="text-foreground leading-relaxed whitespace-pre-line">
-                    {lastResponse}
+            {/* Chat Messages */}
+            <div className="space-y-4 mb-6">
+              {messages.map((message, index) => (
+                <div 
+                  key={index}
+                  className={cn(
+                    "flex animate-fade-in",
+                    message.type === 'user' ? 'justify-end' : 'justify-start'
+                  )}
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <div className={cn(
+                    "max-w-[80%] rounded-2xl px-4 py-3",
+                    message.type === 'user' 
+                      ? "bg-green-100 text-green-900 rounded-br-md" 
+                      : "bg-white shadow-sm border border-green-200/50 rounded-bl-md"
+                  )}>
+                    <p className="text-sm leading-relaxed whitespace-pre-line">
+                      {message.content}
+                    </p>
                   </div>
                 </div>
-              </div>
-            )}
+              ))}
+            </div>
 
             {/* Farm Suggestion Cards */}
-            {getSuggestedFarmDetails().length > 0 && (
+            {messages.length > 0 && messages[messages.length - 1]?.suggestedFarms && (
               <div className="mb-6">
                 <h3 className="text-lg font-semibold text-foreground mb-4">Recommended Farms</h3>
                 <div className="grid gap-4 md:grid-cols-2">
-                  {getSuggestedFarmDetails().map((farm, index) => (
+                  {getSuggestedFarmDetails(messages[messages.length - 1].suggestedFarms).map((farm, index) => (
                     <div 
                       key={farm.id} 
-                      className="bg-white rounded-xl p-4 border border-green-200 shadow-soft hover:shadow-medium transition-smooth animate-fade-in"
+                      className="bg-white rounded-xl p-4 border border-green-200/50 shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in"
                       style={{ animationDelay: `${index * 100}ms` }}
                     >
                       <div className="flex justify-between items-start mb-3">
                         <h4 className="font-semibold text-foreground">{farm.name}</h4>
-                        <span className="text-sm text-muted-foreground">2.3 miles</span>
+                        <span className="text-sm text-muted-foreground">{farm.distance}</span>
                       </div>
                       <div className="mb-3">
                         <p className="text-sm text-muted-foreground mb-2">Available Produce:</p>
@@ -165,7 +197,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                       </div>
                       <Button
                         onClick={() => handleVisitFarm(farm.name)}
-                        className="w-full bg-green-600 hover:bg-green-700 text-white"
+                        className="w-full bg-green-600 hover:bg-green-700 text-white transition-all duration-300"
                         size="sm"
                       >
                         Visit Farm
@@ -178,42 +210,29 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             )}
 
             {/* Suggestion Chips - Only show after first question */}
-            <div className="flex flex-wrap gap-3 justify-center">
-              <button
-                onClick={() => setInputValue("Find organic options near me")}
-                className="px-4 py-2 bg-green-100 hover:bg-green-200 rounded-full text-green-800 hover:text-green-900 text-sm transition-smooth border border-green-200 hover:border-green-300"
-              >
-                Organic Options
-              </button>
-              <button
-                onClick={() => setInputValue("Show me budget-friendly picks")}
-                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-gray-800 hover:text-gray-900 text-sm transition-smooth border border-gray-200 hover:border-gray-300"
-              >
-                Budget-Friendly Picks
-              </button>
-              <button
-                onClick={() => setInputValue("What's fresh this weekend")}
-                className="px-4 py-2 bg-amber-50 hover:bg-amber-100 rounded-full text-amber-800 hover:text-amber-900 text-sm transition-smooth border border-amber-200 hover:border-amber-300"
-              >
-                Fresh This Weekend
-              </button>
-            </div>
+            {messages.length > 0 && (
+              <div className="flex flex-wrap gap-3 justify-center">
+                <button
+                  onClick={() => setInputValue("Find organic options near me")}
+                  className="px-4 py-2 bg-green-100/80 hover:bg-green-200 rounded-full text-green-800 hover:text-green-900 text-sm transition-all duration-300 border border-green-200/50 hover:border-green-300"
+                >
+                  Organic Options
+                </button>
+                <button
+                  onClick={() => setInputValue("Show me budget-friendly picks")}
+                  className="px-4 py-2 bg-white/80 hover:bg-gray-100 rounded-full text-gray-700 hover:text-gray-900 text-sm transition-all duration-300 border border-gray-200/50 hover:border-gray-300"
+                >
+                  Budget-Friendly Picks
+                </button>
+                <button
+                  onClick={() => setInputValue("What's fresh this weekend")}
+                  className="px-4 py-2 bg-amber-50/80 hover:bg-amber-100 rounded-full text-amber-800 hover:text-amber-900 text-sm transition-all duration-300 border border-amber-200/50 hover:border-amber-300"
+                >
+                  Fresh This Weekend
+                </button>
+              </div>
+            )}
 
-          </div>
-        </div>
-      )}
-
-      {/* Selected Farm Display */}
-      {selectedFarm && (
-        <div className="w-full max-w-4xl mx-auto mt-6">
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 border border-green-200 shadow-soft">
-            <div className="text-foreground leading-relaxed">
-              <strong>{selectedFarm.name}</strong> selected! 
-              <br />
-              Pickup times: {selectedFarm.pickupTimes.join(', ')}
-              <br />
-              {selectedFarm.deliveryAvailable ? 'Delivery available' : 'Pickup only'}
-            </div>
           </div>
         </div>
       )}
