@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { Farm } from '@/types/farm';
 import { mockFarms } from '@/data/farmData';
+import { predefinedQAs, PredefinedQA } from '@/data/predefinedQA';
 
 interface ParsedRequest {
   items: Array<{
@@ -124,10 +125,43 @@ export const useAIAssistant = () => {
     return `${co2Saved}kg CO₂ saved vs supermarket`;
   }, []);
 
+  const findPredefinedResponse = useCallback((message: string): PredefinedQA | null => {
+    const lowerMessage = message.toLowerCase();
+    
+    // Find the best matching predefined Q&A
+    const matches = predefinedQAs.filter(qa => 
+      qa.keywords.some(keyword => lowerMessage.includes(keyword))
+    );
+    
+    if (matches.length === 0) return null;
+    
+    // Score matches by number of matching keywords
+    const scoredMatches = matches.map(qa => ({
+      qa,
+      score: qa.keywords.filter(keyword => lowerMessage.includes(keyword)).length
+    }));
+    
+    // Return the highest scoring match
+    scoredMatches.sort((a, b) => b.score - a.score);
+    return scoredMatches[0].qa;
+  }, []);
+
   const generateResponse = useCallback(async (message: string): Promise<AIResponse> => {
     setIsProcessing(true);
     
-    // Simulate AI processing delay
+    // Check for predefined responses first
+    const predefinedResponse = findPredefinedResponse(message);
+    if (predefinedResponse) {
+      // Instant response for demo
+      setIsProcessing(false);
+      return {
+        text: predefinedResponse.response,
+        suggestedFarms: predefinedResponse.suggestedFarms,
+        searchQuery: predefinedResponse.searchQuery
+      };
+    }
+    
+    // Fallback to existing AI logic
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     const parsedRequest = parseRequest(message);
@@ -182,7 +216,7 @@ export const useAIAssistant = () => {
       suggestedFarms: matchingFarms.map(f => f.id),
       searchQuery: parsedRequest.items.map(i => i.type).join(', ')
     };
-  }, [parseRequest, findMatchingFarms, calculateEcoSavings]);
+  }, [findPredefinedResponse, parseRequest, findMatchingFarms, calculateEcoSavings]);
 
   return {
     generateResponse,
