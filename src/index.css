@@ -18,22 +18,22 @@ All colors MUST be HSL for proper theming
     --popover: 0 0% 100%;
     --popover-foreground: 25 15% 15%;
 
-    /* Primary - Fresh farm green */
-    --primary: 142 71% 45%; /* Rich green #22c55e */
+    /* Primary - Sophisticated forest green inspired by Natoora */
+    --primary: 145 50% 42%; /* Deeper forest green */
     --primary-foreground: 0 0% 98%;
-    --primary-glow: 142 71% 55%;
+    --primary-glow: 145 50% 52%;
 
-    /* Secondary - Earth brown */
-    --secondary: 25 45% 85%; /* Light earth tone */
-    --secondary-foreground: 25 50% 25%;
-    --secondary-dark: 25 50% 25%;
+    /* Secondary - Warmer earth tones inspired by Natoora */
+    --secondary: 35 35% 88%; /* Warmer light earth */
+    --secondary-foreground: 35 45% 22%;
+    --secondary-dark: 35 45% 22%;
 
     /* Muted earth tones */
     --muted: 35 20% 92%; /* Soft cream */
     --muted-foreground: 25 25% 45%;
 
-    /* Accent - Warm orange for CTAs */
-    --accent: 24 70% 58%; /* Warm orange */
+    /* Accent - Sophisticated olive/sage inspired by Natoora */
+    --accent: 82 25% 55%; /* Warm sage green */
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 84.2% 60.2%;
@@ -87,8 +87,8 @@ All colors MUST be HSL for proper theming
     --popover: 25 15% 12%;
     --popover-foreground: 35 25% 95%;
 
-    /* Primary stays green but lighter for contrast */
-    --primary: 142 71% 55%;
+    /* Primary - Lighter forest green for dark mode contrast */
+    --primary: 145 50% 52%;
     --primary-foreground: 25 15% 8%;
 
     /* Secondary - Darker earth tones */
@@ -98,8 +98,8 @@ All colors MUST be HSL for proper theming
     --muted: 25 20% 15%;
     --muted-foreground: 35 15% 65%;
 
-    /* Accent - Warmer orange in dark */
-    --accent: 24 70% 65%;
+    /* Accent - Warmer sage in dark mode */
+    --accent: 82 25% 65%;
     --accent-foreground: 25 15% 8%;
 
     --destructive: 0 84.2% 60.2%;
