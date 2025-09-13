@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { MapPin, Leaf, Star } from 'lucide-react';
 
@@ -43,8 +42,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const [selectedFarm, setSelectedFarm] = useState<Farm | null>(null);
-  const [apiKey, setApiKey] = useState('');
-  const [showApiInput, setShowApiInput] = useState(true);
+  const [apiKey] = useState('pk.eyJ1IjoidG91c2lmMTIiLCJhIjoiY21maWZ0cmpoMGN5cTJqc2x2d2cwN2ZoOSJ9.z3_sa3Le-SWQp0kSIUWt9Q');
+  const [showApiInput] = useState(false);
 
   useEffect(() => {
     if (!mapContainer.current || !apiKey) return;
@@ -93,40 +92,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
     };
   }, [farms, highlightedFarms, apiKey, onFarmSelect]);
 
-  if (showApiInput) {
-    return (
-      <Card className="p-6 text-center bg-card shadow-soft">
-        <div className="space-y-4">
-          <div className="flex items-center justify-center gap-2 text-muted-foreground">
-            <MapPin className="w-5 h-5" />
-            <h3 className="font-semibold">Setup Interactive Map</h3>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            To display the interactive farm map, please enter your Mapbox public token.
-            You can get one free at{' '}
-            <a href="https://mapbox.com" target="_blank" rel="noopener noreferrer" className="text-primary underline">
-              mapbox.com
-            </a>
-          </p>
-          <div className="max-w-md mx-auto space-y-2">
-            <Input
-              placeholder="Paste your Mapbox public token here..."
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-              className="text-center"
-            />
-            <button
-              onClick={() => setShowApiInput(false)}
-              disabled={!apiKey.trim()}
-              className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary-glow transition-smooth disabled:opacity-50"
-            >
-              Load Map
-            </button>
-          </div>
-        </div>
-      </Card>
-    );
-  }
+  // Map is always shown since we have the API key hardcoded
 
   return (
     <div className="relative w-full h-[500px] rounded-lg overflow-hidden shadow-soft">
