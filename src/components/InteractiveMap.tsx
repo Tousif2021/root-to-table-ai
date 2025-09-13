@@ -6,27 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { MapPin, Leaf, Star, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-
-export interface Farm {
-  id: string;
-  name: string;
-  coordinates: [number, number];
-  distance: string;
-  rating: number;
-  produce: Array<{
-    type: string;
-    price: number;
-    unit: string;
-    available: boolean;
-    organic: boolean;
-  }>;
-  ecoScore: number;
-  pickupTimes: string[];
-  deliveryAvailable: boolean;
-  imageUrl: string;
-  description: string;
-  specialties: string[];
-}
+import { Farm } from '@/types/farm';
 
 interface InteractiveMapProps {
   farms: Farm[];

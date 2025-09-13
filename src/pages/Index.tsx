@@ -10,7 +10,7 @@ import { Sprout, MapPin, Leaf, Users, Bot } from 'lucide-react';
 import heroImage from '@/assets/hero-produce-crate.jpg';
 import processSteps from '@/assets/process-steps.png';
 import { mockFarms } from '@/data/farmData';
-import { Farm } from '@/components/InteractiveMap';
+import { Farm } from '@/types/farm';
 const Index = () => {
   const [highlightedFarms, setHighlightedFarms] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');

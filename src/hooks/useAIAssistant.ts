@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Farm } from '@/components/InteractiveMap';
+import { Farm } from '@/types/farm';
 import { mockFarms } from '@/data/farmData';
 
 interface ParsedRequest {

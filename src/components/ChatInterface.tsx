@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Plus, Mic, ArrowUp, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAIAssistant } from '@/hooks/useAIAssistant';
-import { Farm } from './InteractiveMap';
+import { Farm } from '@/types/farm';
 
 interface ChatInterfaceProps {
   onFarmsHighlight: (farmIds: string[]) => void;

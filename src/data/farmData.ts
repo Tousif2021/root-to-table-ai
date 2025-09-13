@@ -1,4 +1,4 @@
-import { Farm } from '@/components/InteractiveMap';
+import { Farm } from '@/types/farm';
 
 export const mockFarms: Farm[] = [
   {

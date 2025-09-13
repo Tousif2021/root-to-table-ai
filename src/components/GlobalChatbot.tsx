@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import ChatInterface from './ChatInterface';
-import { Farm } from './InteractiveMap';
+import { Farm } from '@/types/farm';
 import { cn } from '@/lib/utils';
 
 interface GlobalChatbotProps {
