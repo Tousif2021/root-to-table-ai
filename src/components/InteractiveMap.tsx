@@ -207,7 +207,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       
       {/* Enhanced Search Bar - Wider with Better Styling */}
       <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
-        <div className="bg-card/95 backdrop-blur-sm border-4 border-border rounded-full px-8 py-6 shadow-glow min-w-[700px]">
+        <div className="bg-transparent backdrop-blur-sm border-4 border-black rounded-full px-8 py-3 shadow-glow min-w-[700px]">
           <div className="flex items-center gap-3">
             <Search className="w-6 h-6 text-muted-foreground" />
             <Input
