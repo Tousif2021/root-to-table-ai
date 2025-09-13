@@ -88,38 +88,32 @@ const Index = () => {
         </div>
 
         {/* Premium AI Assistant Section */}
-        <div className="space-y-8">
+        <div className="space-y-12">
           <div className="text-center space-y-6">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-primary/10 blur-2xl rounded-full"></div>
-              <div className="relative flex items-center justify-center gap-4 mb-4">
-                <div className="p-3 rounded-full bg-gradient-primary shadow-glow">
-                  <Bot className="w-8 h-8 text-primary-foreground" />
-                </div>
-                <h2 className="font-baskerville text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-                  Your AI Farm Assistant
-                </h2>
+            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-primary/5 border border-primary/10">
+              <div className="w-8 h-8 rounded-full bg-white shadow-soft flex items-center justify-center">
+                <Bot className="w-4 h-4 text-primary" />
               </div>
+              <span className="text-sm font-medium text-primary">AI-Powered Farm Discovery</span>
             </div>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Experience the future of farm-to-table shopping. Our advanced AI assistant understands your needs and connects you with the perfect local farms for fresh, seasonal produce.
+            
+            <h2 className="font-baskerville text-4xl md:text-5xl font-bold text-foreground leading-tight">
+              Meet Your Personal
+              <span className="block text-primary">Farm Assistant</span>
+            </h2>
+            
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-light">
+              Simply tell me what you need, and I'll find the perfect local farms with fresh, seasonal produce just for you.
             </p>
           </div>
           
           <div className="max-w-4xl mx-auto">
-            <div className="relative">
-              {/* Glassmorphism container */}
-              <div className="absolute inset-0 bg-gradient-subtle/20 backdrop-blur-sm rounded-2xl border border-border/50"></div>
-              <div className="absolute inset-0 bg-gradient-primary/5 rounded-2xl"></div>
-              
-              {/* Chat Interface */}
-              <div className="relative p-8">
-                <ChatInterface
-                  onFarmsHighlight={setHighlightedFarms}
-                  onSearchQuery={setSearchQuery}
-                  selectedFarm={selectedFarm}
-                />
-              </div>
+            <div className="bg-white rounded-3xl shadow-medium border border-border/20 overflow-hidden">
+              <ChatInterface
+                onFarmsHighlight={setHighlightedFarms}
+                onSearchQuery={setSearchQuery}
+                selectedFarm={selectedFarm}
+              />
             </div>
           </div>
         </div>

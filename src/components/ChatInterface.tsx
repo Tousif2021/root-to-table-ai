@@ -107,48 +107,53 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   }, [selectedFarm]);
 
   return (
-    <Card className="flex flex-col h-[600px] bg-card/80 backdrop-blur-sm shadow-glow border-border/50">
-      <div className="p-6 border-b border-border/30 bg-gradient-primary text-primary-foreground rounded-t-lg relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary-glow/20"></div>
-        <div className="relative">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 rounded-full bg-white/20 backdrop-blur-sm">
-              <Bot className="w-5 h-5" />
+    <div className="flex flex-col h-[600px] bg-white">
+      <div className="px-8 py-6 border-b border-border/10">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-primary shadow-soft flex items-center justify-center">
+              <Bot className="w-6 h-6 text-white" />
             </div>
-            <h3 className="font-baskerville text-xl font-semibold">Rooted AI Assistant</h3>
+            <div>
+              <h3 className="font-baskerville text-lg font-semibold text-foreground">Rooted Assistant</h3>
+              <p className="text-sm text-muted-foreground font-light">Always here to help you find fresh produce</p>
+            </div>
           </div>
-          <p className="text-sm opacity-90 font-light">Connecting you with local farmers through intelligent recommendations</p>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+            <span className="text-xs text-muted-foreground font-medium">Online</span>
+          </div>
         </div>
       </div>
       
-      <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-gradient-subtle/10">
+      <div className="flex-1 overflow-y-auto p-8 space-y-6 bg-gradient-to-b from-white to-slate-50/30">
         {messages.map((message) => (
           <div
             key={message.id}
             className={cn(
-              "flex gap-4 max-w-[85%] animate-fade-in",
-              message.isUser ? "ml-auto" : "mr-auto"
+              "flex gap-4 max-w-[80%] animate-fade-in",
+              message.isUser ? "ml-auto flex-row-reverse" : "mr-auto"
             )}
           >
             <div
               className={cn(
-                "flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center shadow-soft",
+                "flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center",
                 message.isUser
-                  ? "bg-gradient-primary text-primary-foreground order-2"
-                  : "bg-gradient-to-br from-secondary to-secondary/80 text-secondary-foreground"
+                  ? "bg-primary text-white shadow-soft"
+                  : "bg-white border-2 border-primary/10 text-primary shadow-soft"
               )}
             >
               {message.isUser ? <User className="w-5 h-5" /> : <Bot className="w-5 h-5" />}
             </div>
             <div
               className={cn(
-                "rounded-2xl px-5 py-3 transition-smooth shadow-soft backdrop-blur-sm",
+                "rounded-2xl px-4 py-3 transition-smooth max-w-full",
                 message.isUser
-                  ? "bg-gradient-primary text-primary-foreground order-1 rounded-br-md"
-                  : "bg-card/80 border border-border/30 text-foreground rounded-bl-md"
+                  ? "bg-primary text-white shadow-soft"
+                  : "bg-white border border-border/20 text-foreground shadow-soft"
               )}
             >
-              <div className="text-sm leading-relaxed whitespace-pre-line font-medium">{message.text}</div>
+              <div className="text-sm leading-relaxed whitespace-pre-line">{message.text}</div>
               <p className="text-xs opacity-60 mt-2 font-light">
                 {message.timestamp.toLocaleTimeString([], { 
                   hour: '2-digit', 
@@ -160,20 +165,20 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         ))}
       </div>
       
-      <div className="p-6 border-t border-border/30 bg-card/50 backdrop-blur-sm">
+      <div className="p-8 border-t border-border/10 bg-white">
         <div className="flex gap-3">
           <Input
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Ask me anything about local farms and produce..."
-            className="flex-1 transition-smooth bg-background/50 border-border/50 backdrop-blur-sm focus:bg-background/80 h-12 text-base"
+            className="flex-1 transition-smooth bg-slate-50 border-border/20 focus:bg-white focus:border-primary/30 h-12 text-base rounded-xl"
           />
           <Button 
             onClick={handleSend}
             disabled={!inputValue.trim() || isProcessing}
             size="lg"
-            className="bg-gradient-primary hover:shadow-glow transition-spring px-6 h-12"
+            className="bg-primary hover:bg-primary/90 transition-smooth px-6 h-12 rounded-xl shadow-soft"
           >
             {isProcessing ? (
               <Loader2 className="w-5 h-5 animate-spin" />
@@ -183,7 +188,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           </Button>
         </div>
       </div>
-    </Card>
+    </div>
   );
 };
 
