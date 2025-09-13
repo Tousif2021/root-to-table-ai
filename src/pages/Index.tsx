@@ -1,16 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import ChatInterface from '@/components/ChatInterface';
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '@/components/ui/carousel';
 import FarmCard from '@/components/FarmCard';
-import SustainabilityMetrics from '@/components/SustainabilityMetrics';
-import OrderSummary from '@/components/OrderSummary';
 import { Sprout, MapPin, Leaf, Users } from 'lucide-react';
 import heroImage from '@/assets/hero-produce.jpg';
 
 const Index = () => {
-  const [selectedDelivery, setSelectedDelivery] = useState<any>(null);
 
   // Mock data for demonstration
   const farms = [
@@ -43,59 +40,6 @@ const Index = () => {
     }
   ];
 
-  const sustainabilityData = {
-    co2Saved: 12.4,
-    distanceSaved: 850,
-    localScore: 92,
-    ecosystemImpact: "Supporting 3 local families"
-  };
-
-  const orderItems = [
-    {
-      id: '1',
-      name: 'Strawberries',
-      quantity: '2kg',
-      price: 14.50,
-      farm: "Anna's Farm",
-      freshness: 'today' as const
-    },
-    {
-      id: '2',
-      name: 'Potatoes',
-      quantity: '1kg',
-      price: 4.25,
-      farm: 'Green Valley Co-op',
-      freshness: 'yesterday' as const
-    }
-  ];
-
-  const deliveryOptions = [
-    {
-      type: 'pickup' as const,
-      label: 'Farm Pickup',
-      time: 'Today 2-6 PM',
-      cost: 0,
-      location: "Anna's Organic Farm"
-    },
-    {
-      type: 'hub' as const,
-      label: 'Community Hub',
-      time: 'Tomorrow 10-12 PM',
-      cost: 2.50,
-      location: 'Downtown Farmers Market'
-    },
-    {
-      type: 'delivery' as const,
-      label: 'Home Delivery',
-      time: 'Tomorrow 3-7 PM',
-      cost: 8.00,
-      location: 'Your address'
-    }
-  ];
-
-  const handleConfirmOrder = () => {
-    alert('Order confirmed! You will receive updates on your fresh produce delivery.');
-  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -114,7 +58,7 @@ const Index = () => {
                 <Sprout className="w-6 h-6 text-white" />
               </div>
               <Badge className="bg-white/20 text-white border-white/30">
-                Farm to Table AI
+                ROOTED
               </Badge>
             </div>
             
@@ -170,44 +114,20 @@ const Index = () => {
           </Card>
         </div>
 
-        {/* Main Interface Grid */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-          
-          {/* Left Column - Chat and Farms */}
-          <div className="space-y-8">
-            <div>
-              <h2 className="text-2xl font-bold text-foreground mb-4">Order with AI Assistant</h2>
-              <ChatInterface />
-            </div>
-            
-            <div>
-              <h2 className="text-2xl font-bold text-foreground mb-4">Local Farms Near You</h2>
-              <div className="space-y-4">
-                {farms.map((farm, index) => (
-                  <FarmCard key={index} {...farm} />
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column - Sustainability and Order */}
-          <div className="space-y-8">
-            <div>
-              <h2 className="text-2xl font-bold text-foreground mb-4">Your Impact</h2>
-              <SustainabilityMetrics data={sustainabilityData} />
-            </div>
-            
-            <div>
-              <h2 className="text-2xl font-bold text-foreground mb-4">Current Order</h2>
-              <OrderSummary 
-                items={orderItems}
-                deliveryOptions={deliveryOptions}
-                selectedDelivery={selectedDelivery}
-                onDeliverySelect={setSelectedDelivery}
-                onConfirmOrder={handleConfirmOrder}
-              />
-            </div>
-          </div>
+        {/* Local Farms Carousel */}
+        <div>
+          <h2 className="text-3xl font-bold text-foreground mb-8 text-center">Local Farms Near You</h2>
+          <Carousel className="max-w-5xl mx-auto">
+            <CarouselContent className="-ml-2 md:-ml-4">
+              {farms.map((farm, index) => (
+                <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+                  <FarmCard {...farm} />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
         </div>
       </section>
     </div>
