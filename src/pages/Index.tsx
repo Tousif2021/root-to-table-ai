@@ -33,7 +33,7 @@ const Index = () => {
     sustainability: "medium" as const,
     description: "Traditional orchard focusing on heritage varieties and sustainable growing practices."
   }];
-  return <div className="min-h-screen bg-background">
+  return <div>
       {/* Hero Section */}
       <section className="relative h-[60vh] overflow-hidden">
         <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
