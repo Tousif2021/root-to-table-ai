@@ -45,7 +45,7 @@ const GlobalChatbot: React.FC<GlobalChatbotProps> = ({
       <Button
         onClick={handleToggle}
         className={cn(
-          "fixed left-4 top-1/2 -translate-y-1/2 z-40 w-12 h-12 rounded-full shadow-elegant transition-all duration-300",
+          "fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full shadow-elegant transition-all duration-300",
           "bg-primary hover:bg-primary-glow text-primary-foreground",
           "hover:scale-110 hover:shadow-glow",
           isOpen && "opacity-0 pointer-events-none"
@@ -58,8 +58,8 @@ const GlobalChatbot: React.FC<GlobalChatbotProps> = ({
       {/* Chatbot Overlay */}
       <div
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-96 bg-background/95 backdrop-blur-sm border-r border-border shadow-elegant transition-all duration-300 ease-out",
-          isOpen ? "translate-x-0" : "-translate-x-full"
+          "fixed inset-y-0 right-0 z-50 w-96 bg-background/95 backdrop-blur-sm border-l border-border shadow-elegant transition-all duration-300 ease-out",
+          isOpen ? "translate-x-0" : "translate-x-full"
         )}
       >
         {/* Header with Close Button */}
