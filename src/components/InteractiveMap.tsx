@@ -4,6 +4,8 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { MapPin, Leaf, Star } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import ChatInterface from './ChatInterface';
 
 export interface Farm {
   id: string;
@@ -28,22 +30,32 @@ export interface Farm {
 
 interface InteractiveMapProps {
   farms: Farm[];
-  highlightedFarms?: string[];
-  onFarmSelect: (farm: Farm) => void;
-  searchQuery?: string;
 }
 
 const InteractiveMap: React.FC<InteractiveMapProps> = ({
-  farms,
-  highlightedFarms = [],
-  onFarmSelect,
-  searchQuery
+  farms
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const [selectedFarm, setSelectedFarm] = useState<Farm | null>(null);
+  const [highlightedFarms, setHighlightedFarms] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const [apiKey] = useState('pk.eyJ1IjoidG91c2lmMTIiLCJhIjoiY21maWZ0cmpoMGN5cTJqc2x2d2cwN2ZoOSJ9.z3_sa3Le-SWQp0kSIUWt9Q');
-  const [showApiInput] = useState(false);
+  const navigate = useNavigate();
+
+  const handleFarmSelect = (farm: Farm) => {
+    setSelectedFarm(farm);
+    // Navigate to farm order page
+    navigate(`/order/${encodeURIComponent(farm.name)}`);
+  };
+
+  const handleFarmsHighlight = (farmIds: string[]) => {
+    setHighlightedFarms(farmIds);
+  };
+
+  const handleSearchQuery = (query: string) => {
+    setSearchQuery(query);
+  };
 
   useEffect(() => {
     if (!mapContainer.current || !apiKey) return;
@@ -79,8 +91,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
       // Add click handler
       markerElement.addEventListener('click', () => {
-        setSelectedFarm(farm);
-        onFarmSelect(farm);
+        handleFarmSelect(farm);
       });
     });
 
@@ -90,16 +101,25 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
     return () => {
       map.current?.remove();
     };
-  }, [farms, highlightedFarms, apiKey, onFarmSelect]);
+  }, [farms, highlightedFarms, apiKey, handleFarmSelect]);
 
   // Map is always shown since we have the API key hardcoded
 
   return (
-    <div className="relative w-full h-[500px] rounded-lg overflow-hidden shadow-soft">
+    <div className="relative w-full h-[700px] rounded-lg overflow-hidden shadow-soft">
       <div ref={mapContainer} className="absolute inset-0" />
       
+      {/* Chat Interface */}
+      <div className="absolute bottom-4 left-4 w-96 z-10">
+        <ChatInterface
+          onFarmsHighlight={handleFarmsHighlight}
+          onSearchQuery={handleSearchQuery}
+          selectedFarm={selectedFarm}
+        />
+      </div>
+      
       {selectedFarm && (
-        <Card className="absolute top-4 left-4 p-4 bg-card shadow-glow max-w-sm">
+        <Card className="absolute top-4 left-4 p-4 bg-card shadow-glow max-w-sm z-10">
           <div className="space-y-3">
             <div>
               <h3 className="font-semibold text-foreground">{selectedFarm.name}</h3>
@@ -141,7 +161,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       )}
       
       {searchQuery && (
-        <div className="absolute top-4 right-4">
+        <div className="absolute top-4 right-4 z-10">
           <Badge className="bg-primary text-primary-foreground">
             Searching: {searchQuery}
           </Badge>

@@ -1,20 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '@/components/ui/carousel';
 import FarmCard from '@/components/FarmCard';
-import InteractiveMap, { Farm } from '@/components/InteractiveMap';
-import ChatInterface from '@/components/ChatInterface';
+import InteractiveMap from '@/components/InteractiveMap';
 import { Sprout, MapPin, Leaf, Users } from 'lucide-react';
 import heroImage from '@/assets/hero-produce.jpg';
 import { mockFarms } from '@/data/farmData';
 const Index = () => {
-  const [highlightedFarms, setHighlightedFarms] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [selectedFarm, setSelectedFarm] = useState<Farm | null>(null);
-
-  // Mock data for demonstration - legacy farm cards
   const legacyFarms = [{
     name: "Anna's Organic Farm",
     distance: "12km away",
@@ -41,17 +35,6 @@ const Index = () => {
     description: "Traditional orchard focusing on heritage varieties and sustainable growing practices."
   }];
 
-  const handleFarmsHighlight = (farmIds: string[]) => {
-    setHighlightedFarms(farmIds);
-  };
-
-  const handleSearchQuery = (query: string) => {
-    setSearchQuery(query);
-  };
-
-  const handleFarmSelect = (farm: Farm) => {
-    setSelectedFarm(farm);
-  };
   return <div>
       {/* Hero Section */}
       <section className="relative h-[60vh] overflow-hidden">
@@ -133,22 +116,8 @@ const Index = () => {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
-              <InteractiveMap
-                farms={mockFarms}
-                highlightedFarms={highlightedFarms}
-                onFarmSelect={handleFarmSelect}
-                searchQuery={searchQuery}
-              />
-            </div>
-            <div className="lg:col-span-1">
-              <ChatInterface
-                onFarmsHighlight={handleFarmsHighlight}
-                onSearchQuery={handleSearchQuery}
-                selectedFarm={selectedFarm}
-              />
-            </div>
+          <div className="w-full">
+            <InteractiveMap farms={mockFarms} />
           </div>
         </div>
 
