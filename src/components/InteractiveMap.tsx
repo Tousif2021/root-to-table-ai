@@ -17,6 +17,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
+  const markers = useRef<mapboxgl.Marker[]>([]);
   const [selectedFarm, setSelectedFarm] = useState<Farm | null>(null);
   const [highlightedFarms, setHighlightedFarms] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -65,24 +66,36 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       zoom: 10,
     });
 
-    // Add farm markers
-    farms.forEach((farm) => {
+    // Clear existing markers
+    markers.current.forEach(marker => marker.remove());
+    markers.current = [];
+
+    // Filter farms based on search query
+    const farmsToShow = searchQuery === '' 
+      ? farms 
+      : farms.filter(farm => highlightedFarms.includes(farm.id));
+
+    // Add farm markers for filtered farms only
+    farmsToShow.forEach((farm) => {
       if (!map.current) return;
 
       const isHighlighted = highlightedFarms.includes(farm.id);
       
-      // Create custom marker element
+      // Create custom marker element with green theming
       const markerElement = document.createElement('div');
       markerElement.className = `w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ${
         isHighlighted 
-          ? 'bg-primary shadow-glow scale-110' 
-          : 'bg-secondary hover:bg-accent'
+          ? 'bg-green-600 shadow-glow scale-110' 
+          : 'bg-green-500 hover:bg-green-400'
       }`;
       markerElement.innerHTML = `<svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>`;
 
       const marker = new mapboxgl.Marker(markerElement)
         .setLngLat([farm.coordinates[0], farm.coordinates[1]])
         .addTo(map.current);
+
+      // Store marker reference for cleanup
+      markers.current.push(marker);
 
       // Add click handler
       markerElement.addEventListener('click', () => {
@@ -94,9 +107,12 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
     map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
     return () => {
+      // Cleanup markers
+      markers.current.forEach(marker => marker.remove());
+      markers.current = [];
       map.current?.remove();
     };
-  }, [farms, highlightedFarms, apiKey, handleFarmSelect]);
+  }, [farms, highlightedFarms, searchQuery, apiKey, handleFarmSelect]);
 
   // Map is always shown since we have the API key hardcoded
 
@@ -106,15 +122,15 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       
       {/* Search Bar */}
       <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
-        <div className="bg-card/95 backdrop-blur-sm border border-border rounded-full px-4 py-2 shadow-soft min-w-[400px]">
+        <div className="bg-card/95 backdrop-blur-sm border-2 border-green-600 rounded-full px-4 py-1 shadow-soft min-w-[400px]">
           <div className="flex items-center gap-3">
-            <Search className="w-5 h-5 text-muted-foreground" />
+            <Search className="w-5 h-5 text-green-600" />
             <Input
               type="text"
               placeholder="Search for produce (e.g. strawberries, carrots...)"
               value={searchQuery}
               onChange={handleSearchChange}
-              
+              className="bg-transparent border-0 h-8 py-1 focus-visible:ring-0"
             />
           </div>
           {highlightedFarms.length > 0 && (
