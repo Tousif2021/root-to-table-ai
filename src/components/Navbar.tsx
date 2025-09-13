@@ -17,40 +17,44 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+    <nav className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md border-b border-border/50">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="flex justify-between items-center h-20">
           {/* Logo and Company Name */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="p-2 rounded-full bg-primary group-hover:bg-primary-glow transition-smooth">
-              <Sprout className="w-5 h-5 text-primary-foreground" />
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="p-2.5 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-smooth">
+              <Sprout className="w-6 h-6 text-primary" />
             </div>
-            <span className="text-xl font-bold text-foreground">ROOTED</span>
+            <span className="text-2xl font-baskerville font-bold text-foreground tracking-wide">ROOTED</span>
           </Link>
 
           {/* Navigation Links */}
-          <div className="hidden md:flex items-center space-x-1">
+          <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => {
               const Icon = item.icon;
               const active = isActive(item.path);
               
               return (
-                <Button
+                <Link
                   key={item.name}
-                  asChild
-                  variant={active ? "secondary" : "ghost"}
-                  className={`transition-smooth ${active ? 'bg-secondary text-secondary-foreground' : 'hover:bg-accent/50'}`}
+                  to={item.path}
+                  className={`flex items-center gap-2 text-sm font-medium transition-smooth py-2 px-1 relative group ${
+                    active 
+                      ? 'text-primary' 
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
                 >
-                  <Link to={item.path} className="flex items-center gap-2">
-                    <Icon className="w-4 h-4" />
-                    {item.name}
-                    {item.name === 'Cart' && (
-                      <Badge variant="secondary" className="ml-1 bg-primary text-primary-foreground">
-                        0
-                      </Badge>
-                    )}
-                  </Link>
-                </Button>
+                  <Icon className="w-4 h-4" />
+                  {item.name}
+                  {item.name === 'Cart' && (
+                    <Badge variant="secondary" className="ml-1 bg-primary text-primary-foreground text-xs min-w-5 h-5">
+                      0
+                    </Badge>
+                  )}
+                  {active && (
+                    <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full" />
+                  )}
+                </Link>
               );
             })}
           </div>
