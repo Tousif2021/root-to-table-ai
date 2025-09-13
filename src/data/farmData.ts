@@ -4,7 +4,7 @@ export const mockFarms: Farm[] = [
   {
     id: '1',
     name: "Anders' Organic Farm",
-    location: { lat: 59.3493, lng: 18.0686 },
+    coordinates: [18.0686, 59.3493],
     distance: '6km away',
     rating: 4.9,
     produce: [
@@ -23,7 +23,7 @@ export const mockFarms: Farm[] = [
   {
     id: '2',
     name: "Lena's Heritage Farm",
-    location: { lat: 59.3293, lng: 18.1086 },
+    coordinates: [18.1086, 59.3293],
     distance: '8km away', 
     rating: 4.8,
     produce: [
@@ -42,7 +42,7 @@ export const mockFarms: Farm[] = [
   {
     id: '3',
     name: 'Green Valley Co-op',
-    location: { lat: 59.3093, lng: 18.0486 },
+    coordinates: [18.0486, 59.3093],
     distance: '4km away',
     rating: 4.7,
     produce: [
@@ -61,7 +61,7 @@ export const mockFarms: Farm[] = [
   {
     id: '4',
     name: 'Sunrise Orchards',
-    location: { lat: 59.3693, lng: 18.0886 },
+    coordinates: [18.0886, 59.3693],
     distance: '12km away',
     rating: 4.6,
     produce: [
@@ -80,7 +80,7 @@ export const mockFarms: Farm[] = [
   {
     id: '5',
     name: 'Urban Farm Stockholm',
-    location: { lat: 59.3193, lng: 18.0286 },
+    coordinates: [18.0286, 59.3193],
     distance: '3km away',
     rating: 4.5,
     produce: [
@@ -99,7 +99,7 @@ export const mockFarms: Farm[] = [
   {
     id: '6',
     name: 'Tomato Garden Farm',
-    location: { lat: 59.3393, lng: 18.0586 },
+    coordinates: [18.0586, 59.3393],
     distance: '7km away',
     rating: 4.8,
     produce: [
@@ -118,7 +118,7 @@ export const mockFarms: Farm[] = [
   {
     id: '7',
     name: 'Rainbow Chard Collective',
-    location: { lat: 59.3593, lng: 18.0386 },
+    coordinates: [18.0386, 59.3593],
     distance: '9km away',
     rating: 4.7,
     produce: [
@@ -137,7 +137,7 @@ export const mockFarms: Farm[] = [
   {
     id: '8',
     name: 'Nurture Gardens',
-    location: { lat: 59.3193, lng: 18.0786 },
+    coordinates: [18.0786, 59.3193],
     distance: '5km away',
     rating: 4.9,
     produce: [
@@ -156,7 +156,7 @@ export const mockFarms: Farm[] = [
   {
     id: '9',
     name: 'Seedling Central',
-    location: { lat: 59.3493, lng: 18.0186 },
+    coordinates: [18.0186, 59.3493],
     distance: '11km away',
     rating: 4.6,
     produce: [
@@ -175,7 +175,7 @@ export const mockFarms: Farm[] = [
   {
     id: '10',
     name: 'Organic Rows Farm',
-    location: { lat: 59.3793, lng: 18.0486 },
+    coordinates: [18.0486, 59.3793],
     distance: '14km away',
     rating: 4.8,
     produce: [
@@ -194,7 +194,7 @@ export const mockFarms: Farm[] = [
   {
     id: '11',
     name: 'Citrus Grove Co.',
-    location: { lat: 59.3093, lng: 18.1186 },
+    coordinates: [18.1186, 59.3093],
     distance: '16km away',
     rating: 4.7,
     produce: [
@@ -213,7 +213,7 @@ export const mockFarms: Farm[] = [
   {
     id: '12',
     name: 'Harvest Market Farm',
-    location: { lat: 59.3293, lng: 18.0886 },
+    coordinates: [18.0886, 59.3293],
     distance: '10km away',
     rating: 4.9,
     produce: [
@@ -232,7 +232,7 @@ export const mockFarms: Farm[] = [
   {
     id: '13',
     name: 'Lettuce Love Farm',
-    location: { lat: 59.3693, lng: 18.0286 },
+    coordinates: [18.0286, 59.3693],
     distance: '13km away',
     rating: 4.8,
     produce: [
@@ -251,7 +251,7 @@ export const mockFarms: Farm[] = [
   {
     id: '14',
     name: 'Sustainable Fields',
-    location: { lat: 59.3393, lng: 18.1086 },
+    coordinates: [18.1086, 59.3393],
     distance: '15km away',
     rating: 4.6,
     produce: [
@@ -270,7 +270,7 @@ export const mockFarms: Farm[] = [
   {
     id: '15',
     name: 'Vineyard Valley Farm',
-    location: { lat: 59.3193, lng: 18.0986 },
+    coordinates: [18.0986, 59.3193],
     distance: '17km away',
     rating: 4.7,
     produce: [
