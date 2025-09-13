@@ -16,6 +16,9 @@ export const mockFarms: Farm[] = [
     ecoScore: 9.2,
     pickupTimes: ['Today 14:00-18:00', 'Tomorrow 09:00-17:00'],
     deliveryAvailable: true,
+    imageUrl: '/src/assets/hero-produce.jpg',
+    description: 'Family-owned organic farm specializing in seasonal produce with sustainable farming practices for over 30 years.',
+    specialties: ['Organic Certified', 'Pesticide-Free', 'Local Family Farm'],
   },
   {
     id: '2',
@@ -32,6 +35,9 @@ export const mockFarms: Farm[] = [
     ecoScore: 8.8,
     pickupTimes: ['Tomorrow 10:00-16:00', 'Weekend 08:00-15:00'],
     deliveryAvailable: false,
+    imageUrl: '/src/assets/hero-produce-crate.jpg',
+    description: 'Heritage farm preserving traditional farming methods while maintaining high quality organic standards.',
+    specialties: ['Heritage Varieties', 'Traditional Methods', 'Organic Certified'],
   },
   {
     id: '3',
@@ -48,6 +54,9 @@ export const mockFarms: Farm[] = [
     ecoScore: 7.5,
     pickupTimes: ['Today 12:00-19:00'],
     deliveryAvailable: true,
+    imageUrl: '/src/assets/process-steps.png',
+    description: 'Community-supported cooperative focused on affordable fresh produce with sustainable growing practices.',
+    specialties: ['Community Supported', 'Affordable Prices', 'Local Cooperative'],
   },
   {
     id: '4',
@@ -64,6 +73,9 @@ export const mockFarms: Farm[] = [
     ecoScore: 8.5,
     pickupTimes: ['Weekend 09:00-17:00'],
     deliveryAvailable: false,
+    imageUrl: '/src/assets/hero-produce.jpg',
+    description: 'Premium fruit orchard specializing in organic berries and tree fruits with sustainable irrigation systems.',
+    specialties: ['Premium Fruits', 'Organic Berries', 'Sustainable Irrigation'],
   },
   {
     id: '5',
@@ -80,5 +92,8 @@ export const mockFarms: Farm[] = [
     ecoScore: 9.0,
     pickupTimes: ['Today 15:00-20:00', 'Tomorrow 10:00-18:00'],
     deliveryAvailable: true,
+    imageUrl: '/src/assets/hero-produce-crate.jpg',
+    description: 'Innovative urban farm using vertical growing techniques to provide fresh herbs and microgreens year-round.',
+    specialties: ['Urban Farming', 'Vertical Growing', 'Year-Round Production'],
   },
 ];

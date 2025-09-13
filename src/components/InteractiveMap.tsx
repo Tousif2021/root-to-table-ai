@@ -26,6 +26,9 @@ export interface Farm {
   ecoScore: number;
   pickupTimes: string[];
   deliveryAvailable: boolean;
+  imageUrl?: string;
+  description?: string;
+  specialties?: string[];
 }
 
 interface InteractiveMapProps {
