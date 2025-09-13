@@ -53,8 +53,10 @@ const GlobalChatbot: React.FC<GlobalChatbotProps> = ({
   };
 
   // Floating Button Component
-  const FloatingChatButton = () => (
+  const FloatingChatButton = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement>>((props, ref) => (
     <Button
+      ref={ref}
+      {...props}
       className={cn(
         "fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full shadow-glow transition-smooth",
         "bg-gradient-primary text-primary-foreground",
@@ -64,7 +66,9 @@ const GlobalChatbot: React.FC<GlobalChatbotProps> = ({
     >
       <MessageCircle className="w-6 h-6" />
     </Button>
-  );
+  ));
+  
+  FloatingChatButton.displayName = "FloatingChatButton";
 
   // Chat Content Component
   const ChatContent = () => (
