@@ -6,7 +6,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext
 import FarmCard from '@/components/FarmCard';
 import InteractiveMap from '@/components/InteractiveMap';
 import { Sprout, MapPin, Leaf, Users } from 'lucide-react';
-import heroImage from '@/assets/hero-produce.jpg';
+import heroImage from '@/assets/hero-produce-crate.jpg';
 import { mockFarms } from '@/data/farmData';
 const Index = () => {
   const legacyFarms = [{
