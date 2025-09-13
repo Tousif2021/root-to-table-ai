@@ -6,49 +6,39 @@ import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext
 import FarmCard from '@/components/FarmCard';
 import { Sprout, MapPin, Leaf, Users } from 'lucide-react';
 import heroImage from '@/assets/hero-produce.jpg';
-
 const Index = () => {
-
   // Mock data for demonstration
-  const farms = [
-    {
-      name: "Anna's Organic Farm",
-      distance: "12km away",
-      rating: 4.9,
-      specialties: ["Strawberries", "Leafy Greens", "Herbs"],
-      availability: "Available today",
-      sustainability: "high" as const,
-      description: "Family-run organic farm specializing in pesticide-free produce. Growing fresh vegetables for over 20 years."
-    },
-    {
-      name: "Green Valley Co-op",
-      distance: "8km away", 
-      rating: 4.7,
-      specialties: ["Root Vegetables", "Potatoes", "Onions"],
-      availability: "Available tomorrow",
-      sustainability: "high" as const,
-      description: "Community-supported agriculture providing fresh, local produce to families across the region."
-    },
-    {
-      name: "Sunset Orchards",
-      distance: "15km away",
-      rating: 4.8,
-      specialties: ["Seasonal Fruits", "Apples", "Berries"],
-      availability: "Available weekends",
-      sustainability: "medium" as const,
-      description: "Traditional orchard focusing on heritage varieties and sustainable growing practices."
-    }
-  ];
-
-
-  return (
-    <div className="min-h-screen bg-background">
+  const farms = [{
+    name: "Anna's Organic Farm",
+    distance: "12km away",
+    rating: 4.9,
+    specialties: ["Strawberries", "Leafy Greens", "Herbs"],
+    availability: "Available today",
+    sustainability: "high" as const,
+    description: "Family-run organic farm specializing in pesticide-free produce. Growing fresh vegetables for over 20 years."
+  }, {
+    name: "Green Valley Co-op",
+    distance: "8km away",
+    rating: 4.7,
+    specialties: ["Root Vegetables", "Potatoes", "Onions"],
+    availability: "Available tomorrow",
+    sustainability: "high" as const,
+    description: "Community-supported agriculture providing fresh, local produce to families across the region."
+  }, {
+    name: "Sunset Orchards",
+    distance: "15km away",
+    rating: 4.8,
+    specialties: ["Seasonal Fruits", "Apples", "Berries"],
+    availability: "Available weekends",
+    sustainability: "medium" as const,
+    description: "Traditional orchard focusing on heritage varieties and sustainable growing practices."
+  }];
+  return <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="relative h-[60vh] overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${heroImage})` }}
-        />
+        <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
+        backgroundImage: `url(${heroImage})`
+      }} />
         <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/30 to-transparent" />
         
         <div className="relative z-10 flex flex-col justify-center h-full max-w-6xl mx-auto px-4">
@@ -76,7 +66,7 @@ const Index = () => {
               <Button size="lg" className="bg-primary hover:bg-primary-glow transition-spring">
                 Start Ordering
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary transition-spring">
+              <Button size="lg" variant="outline" className="border-white transition-spring text-zinc-600 bg-gray-300 hover:bg-gray-200">
                 Find Local Farms
               </Button>
             </div>
@@ -119,19 +109,15 @@ const Index = () => {
           <h2 className="text-3xl font-bold text-foreground mb-8 text-center">Local Farms Near You</h2>
           <Carousel className="max-w-5xl mx-auto">
             <CarouselContent className="-ml-2 md:-ml-4">
-              {farms.map((farm, index) => (
-                <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+              {farms.map((farm, index) => <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
                   <FarmCard {...farm} />
-                </CarouselItem>
-              ))}
+                </CarouselItem>)}
             </CarouselContent>
             <CarouselPrevious />
             <CarouselNext />
           </Carousel>
         </div>
       </section>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
