@@ -9,6 +9,123 @@ export interface PredefinedQA {
 
 export const predefinedQAs: PredefinedQA[] = [
   {
+    keywords: ['available', 'right now', 'today', 'what vegetables', 'what can I get'],
+    question: "What vegetables are available right now?",
+    response: `This week's seasonal picks include fresh spring vegetables from nearby farms:
+
+🥕 **Fresh Asparagus** - Peak season right now
+🥕 **Baby Carrots** - Sweet and tender, just harvested
+🥕 **Spring Onions** - Crisp and flavorful
+🥕 **Rhubarb** - Perfect for spring cooking
+
+These are all in season locally and available for same-day pickup from our partner farms!`,
+    suggestedFarms: ['resta-gard', 'spring-harvest', 'seasonal-greens'],
+    searchQuery: 'seasonal vegetables',
+    isDemo: true
+  },
+  {
+    keywords: ['fruits', 'what fruits', 'fruit today', 'order fruit'],
+    question: "What fruits can I order today?",
+    response: `Right now we have these seasonal fruits from local orchards:
+
+🍎 **Crisp Apples** - Stored from last harvest, still fresh
+🍓 **Strawberries** - Early season berries now available  
+🫐 **Gooseberries** - Tart and fresh for summer
+🟣 **Early Plums** - Just coming into season
+
+All harvested within the past few days from farms within 25km!`,
+    suggestedFarms: ['orchard-fresh', 'berry-fields', 'fruit-growers'],
+    searchQuery: 'seasonal fruits',
+    isDemo: true
+  },
+  {
+    keywords: ['cherry tomatoes', 'cherry tomato', 'small tomatoes'],
+    question: "I want cherry tomatoes",
+    response: `I understand — cherry tomatoes aren't in season locally yet (they'll be ready in July-August). 
+
+Can I show you **sweet peppers** and **radishes** as alternatives for your salads? They're crisp, colorful, and perfect for the same dishes!
+
+Both are freshly harvested and available from nearby farms right now.`,
+    suggestedFarms: ['resta-gard', 'pepper-patch', 'crisp-vegetables'],
+    searchQuery: 'peppers radishes',
+    isDemo: true
+  },
+  {
+    keywords: ['mangoes', 'mango', 'tropical fruit'],
+    question: "Do you have mangoes?",
+    response: `Mangoes aren't grown locally here in Sweden, but I can suggest some delicious local alternatives:
+
+🍐 **Juicy Pears** - Sweet and refreshing
+🍓 **Fresh Strawberries** - In season now
+
+Both are from a farm just 20km away and much fresher than imported tropical fruits. Would you like to see those farms on the map?`,
+    suggestedFarms: ['local-orchards', 'berry-fresh', 'pear-grove'],
+    searchQuery: 'pears strawberries',
+    isDemo: true
+  },
+  {
+    keywords: ['ok', 'yes', 'sure', 'alternatives', 'peppers radishes'],
+    question: "Ok, show me the alternatives",
+    response: `Great! Here are some fresh **sweet peppers** and **radishes** from **Resta Gård**, harvested recently:
+
+🌶️ **Sweet Bell Peppers** - 32 SEK/kg
+🔴 **Fresh Radishes** - 18 SEK/kg
+📍 **Resta Gård** (8.5 km) - Organic certified
+⭐ Rating: 4.7 | Eco Score: 8/10
+🕐 Pickup available today 8AM-7PM
+
+Perfect for salads and fresh eating! Both picked this morning.`,
+    suggestedFarms: ['resta-gard'],
+    searchQuery: 'peppers radishes resta',
+    isDemo: true
+  },
+  {
+    keywords: ['free-range eggs', 'eggs', 'fresh eggs', 'free range'],
+    question: "Do you have free-range eggs available?",
+    response: `Yes! Several partner farms have **fresh free-range eggs** laid within the last two days:
+
+🥚 **Resta Gård** - Free-range eggs: 45 SEK/dozen
+🥚 **Happy Hens Farm** - Organic free-range: 52 SEK/dozen  
+🥚 **Countryside Poultry** - Pasture-raised: 48 SEK/dozen
+
+All hens roam freely on grass pastures and are fed natural diets. Eggs collected fresh daily!`,
+    suggestedFarms: ['resta-gard', 'happy-hens', 'countryside-poultry'],
+    searchQuery: 'free-range eggs',
+    isDemo: true
+  },
+  {
+    keywords: ['fresh herbs', 'herbs', 'basil', 'dill', 'parsley'],
+    question: "I also need fresh herbs",
+    response: `Absolutely — this week we have these herbs in season:
+
+🌿 **Fresh Basil** - 22 SEK/bunch
+🌿 **Dill** - 18 SEK/bunch  
+🌿 **Parsley** - 16 SEK/bunch
+
+Should I combine them with your egg order into one basket? It would save on pickup/delivery costs!`,
+    suggestedFarms: ['herb-gardens', 'resta-gard', 'fresh-greens'],
+    searchQuery: 'herbs basil dill parsley',
+    isDemo: true
+  },
+  {
+    keywords: ['yes please', 'combine', 'one basket', 'together'],
+    question: "Yes please, combine them",
+    response: `Done! I've added **free-range eggs** and a **mixed herb bundle** to your basket:
+
+🛒 **Your Basket:**
+• Free-range eggs (1 dozen) - 45 SEK
+• Fresh herb bundle (basil, dill, parsley) - 50 SEK
+• **Total: 95 SEK**
+
+📍 Available for pickup at **Resta Gård** today 8AM-7PM
+🚚 Or delivery available for 30 SEK
+
+You can check out whenever you're ready!`,
+    suggestedFarms: ['resta-gard'],
+    searchQuery: 'eggs herbs basket',
+    isDemo: true
+  },
+  {
     keywords: ['strawberries', 'strawberry', 'party', 'weekend'],
     question: "I need fresh strawberries for a party this weekend",
     response: `Perfect timing! I found 3 excellent strawberry farms available for weekend pickup:

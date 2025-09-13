@@ -2,6 +2,119 @@ import { Farm } from '@/types/farm';
 
 export const mockFarms: Farm[] = [
   {
+    id: 'resta-gard',
+    name: "Resta Gård",
+    coordinates: [18.0500, 59.3400] as [number, number],
+    distance: "8.5 km",
+    rating: 4.7,
+    produce: [
+      { type: 'Sweet Peppers', price: 32, unit: 'kg', available: true, organic: true },
+      { type: 'Radishes', price: 18, unit: 'kg', available: true, organic: true },
+      { type: 'Free-range Eggs', price: 45, unit: 'dozen', available: true, organic: false },
+      { type: 'Fresh Basil', price: 22, unit: 'bunch', available: true, organic: true },
+      { type: 'Dill', price: 18, unit: 'bunch', available: true, organic: true },
+      { type: 'Parsley', price: 16, unit: 'bunch', available: true, organic: true },
+      { type: 'Spring Onions', price: 24, unit: 'kg', available: true, organic: true }
+    ],
+    ecoScore: 8,
+    pickupTimes: ["8:00-19:00"],
+    deliveryAvailable: true,
+    imageUrl: "/src/assets/farm-vegetables-market.jpg",
+    description: "Traditional Swedish farm specializing in seasonal vegetables, fresh herbs, and free-range poultry. Known for their organic growing practices and fresh daily harvests.",
+    specialties: ["Seasonal Vegetables", "Fresh Herbs", "Free-range Eggs", "Organic Certified"]
+  },
+  {
+    id: 'happy-hens',
+    name: "Happy Hens Farm",
+    coordinates: [18.1200, 59.3100] as [number, number],
+    distance: "12.8 km",
+    rating: 4.8,
+    produce: [
+      { type: 'Organic Free-range Eggs', price: 52, unit: 'dozen', available: true, organic: true },
+      { type: 'Duck Eggs', price: 75, unit: 'dozen', available: true, organic: true },
+      { type: 'Fresh Herbs Mix', price: 35, unit: 'bundle', available: true, organic: true }
+    ],
+    ecoScore: 9,
+    pickupTimes: ["7:00-18:00"],
+    deliveryAvailable: true,
+    imageUrl: "/src/assets/farm-workers-field.jpg",
+    description: "Passionate about animal welfare, our hens roam freely on natural pastures. Certified organic with the highest standards for both animal care and environmental sustainability.",
+    specialties: ["Organic Eggs", "Pasture-raised Poultry", "Animal Welfare Certified"]
+  },
+  {
+    id: 'countryside-poultry',
+    name: "Countryside Poultry",
+    coordinates: [17.9500, 59.3200] as [number, number],
+    distance: "14.5 km",
+    rating: 4.6,
+    produce: [
+      { type: 'Pasture-raised Eggs', price: 48, unit: 'dozen', available: true, organic: false },
+      { type: 'Quail Eggs', price: 95, unit: 'dozen', available: true, organic: false }
+    ],
+    ecoScore: 8,
+    pickupTimes: ["9:00-17:00"],
+    deliveryAvailable: false,
+    imageUrl: "/src/assets/farm-sunset-path.jpg",
+    description: "Family-run poultry farm with focus on pasture-raised birds and natural feeding practices.",
+    specialties: ["Pasture-raised", "Natural Feeding", "Family Farm"]
+  },
+  {
+    id: 'spring-harvest',
+    name: "Spring Harvest Farm",
+    coordinates: [18.0800, 59.3600] as [number, number],
+    distance: "9.8 km",
+    rating: 4.5,
+    produce: [
+      { type: 'Fresh Asparagus', price: 85, unit: 'kg', available: true, organic: true },
+      { type: 'Baby Carrots', price: 28, unit: 'kg', available: true, organic: true },
+      { type: 'Spring Onions', price: 26, unit: 'kg', available: true, organic: true },
+      { type: 'Rhubarb', price: 35, unit: 'kg', available: true, organic: false }
+    ],
+    ecoScore: 7,
+    pickupTimes: ["8:00-18:00"],
+    deliveryAvailable: true,
+    imageUrl: "/src/assets/farm-harvest-vegetables.jpg",
+    description: "Seasonal farm specializing in fresh spring vegetables. Follow natural growing cycles for peak freshness and flavor.",
+    specialties: ["Spring Vegetables", "Seasonal Produce", "Natural Growing"]
+  },
+  {
+    id: 'orchard-fresh',
+    name: "Orchard Fresh",
+    coordinates: [18.0300, 59.3800] as [number, number],
+    distance: "16.2 km",
+    rating: 4.7,
+    produce: [
+      { type: 'Crisp Apples', price: 38, unit: 'kg', available: true, organic: true },
+      { type: 'Strawberries', price: 55, unit: 'kg', available: true, organic: true },
+      { type: 'Gooseberries', price: 75, unit: 'kg', available: true, organic: true },
+      { type: 'Early Plums', price: 62, unit: 'kg', available: true, organic: false }
+    ],
+    ecoScore: 8,
+    pickupTimes: ["7:00-19:00"],
+    deliveryAvailable: true,
+    imageUrl: "/src/assets/farm-oranges.jpg",
+    description: "Local orchard specializing in seasonal fruits with traditional growing methods.",
+    specialties: ["Seasonal Fruits", "Traditional Methods", "Local Varieties"]
+  },
+  {
+    id: 'berry-fields',
+    name: "Berry Fields Farm",
+    coordinates: [17.9800, 59.3900] as [number, number],
+    distance: "18.3 km",
+    rating: 4.8,
+    produce: [
+      { type: 'Strawberries', price: 52, unit: 'kg', available: true, organic: true },
+      { type: 'Gooseberries', price: 78, unit: 'kg', available: true, organic: true },
+      { type: 'Blackcurrants', price: 85, unit: 'kg', available: true, organic: true }
+    ],
+    ecoScore: 9,
+    pickupTimes: ["6:00-20:00"],
+    deliveryAvailable: false,
+    imageUrl: "/src/assets/farm-vineyard-rows.jpg",
+    description: "Specialty berry farm with focus on organic growing and sustainable practices.",
+    specialties: ["Organic Berries", "Sustainable Growing", "Specialty Varieties"]
+  },
+  {
     id: '1',
     name: "Anders' Organic Farm",
     coordinates: [18.0686, 59.3493],
