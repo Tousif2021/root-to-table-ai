@@ -147,7 +147,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
               placeholder="Search for produce (e.g. strawberries, carrots...)"
               value={searchQuery}
               onChange={handleSearchChange}
-              className="bg-transparent border-0 text-white placeholder:text-green-100 focus-visible:ring-0 focus-visible:ring-offset-0 flex-1"
+              className="bg-transparent border-0 text-green-600 placeholder:text-green-600 focus-visible:ring-0 focus-visible:ring-offset-0 flex-1"
             />
           </div>
           {highlightedFarms.length > 0 && (
