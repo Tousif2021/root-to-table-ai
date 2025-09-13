@@ -10,10 +10,7 @@ import { useNavigate } from 'react-router-dom';
 export interface Farm {
   id: string;
   name: string;
-  location: {
-    lat: number;
-    lng: number;
-  };
+  coordinates: [number, number];
   distance: string;
   rating: number;
   produce: Array<{
@@ -26,6 +23,9 @@ export interface Farm {
   ecoScore: number;
   pickupTimes: string[];
   deliveryAvailable: boolean;
+  imageUrl: string;
+  description: string;
+  specialties: string[];
 }
 
 interface InteractiveMapProps {
@@ -95,13 +95,14 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       const markerElement = document.createElement('div');
       markerElement.className = `w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ${
         isHighlighted 
-          ? 'bg-primary shadow-glow scale-110' 
-          : 'bg-secondary hover:bg-accent'
+          ? 'bg-green-500 shadow-glow scale-110' 
+          : 'bg-green-600 hover:bg-green-500'
       }`;
       markerElement.innerHTML = `<svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>`;
+      markerElement.title = `${farm.name} - Rating: ${farm.rating}⭐`;
 
       const marker = new mapboxgl.Marker(markerElement)
-        .setLngLat([farm.location.lng, farm.location.lat])
+        .setLngLat(farm.coordinates)
         .addTo(map.current);
 
       // Add click handler
