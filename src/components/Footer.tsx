@@ -11,7 +11,7 @@ const Footer = () => {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <Leaf className="w-8 h-8 text-primary" />
-              <h3 className="text-xl font-semibold text-foreground">Farm Direct</h3>
+              <h3 className="text-xl font-semibold text-foreground">ROOTED</h3>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">
               Connecting you directly with local farms for the freshest, most sustainable produce. 
@@ -73,7 +73,7 @@ const Footer = () => {
               </div>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Mail className="w-4 h-4" />
-                <span>hello@farmdirect.se</span>
+                <span>hello@rooted.se</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <MapPin className="w-4 h-4" />
@@ -87,7 +87,7 @@ const Footer = () => {
         <div className="border-t border-border mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-sm text-muted-foreground">
-              © 2024 Farm Direct. All rights reserved.
+              © 2025 ROOTED. All rights reserved.
             </div>
             <div className="flex items-center gap-6 text-sm text-muted-foreground">
               <a href="#" className="hover:text-primary transition-colors">Privacy Policy</a>
