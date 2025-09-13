@@ -1,15 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '@/components/ui/carousel';
 import FarmCard from '@/components/FarmCard';
 import InteractiveMap from '@/components/InteractiveMap';
-import { Sprout, MapPin, Leaf, Users } from 'lucide-react';
+import ChatInterface from '@/components/ChatInterface';
+import { Sprout, MapPin, Leaf, Users, Bot } from 'lucide-react';
 import heroImage from '@/assets/hero-produce-crate.jpg';
 import processSteps from '@/assets/process-steps.png';
 import { mockFarms } from '@/data/farmData';
+import { Farm } from '@/components/InteractiveMap';
 const Index = () => {
+  const [highlightedFarms, setHighlightedFarms] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [selectedFarm, setSelectedFarm] = useState<Farm | null>(null);
+
   const legacyFarms = [{
     name: "Anna's Organic Farm",
     distance: "12km away",
@@ -78,6 +84,43 @@ const Index = () => {
           
           <div className="w-full">
             <InteractiveMap farms={mockFarms} />
+          </div>
+        </div>
+
+        {/* Premium AI Assistant Section */}
+        <div className="space-y-8">
+          <div className="text-center space-y-6">
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-primary/10 blur-2xl rounded-full"></div>
+              <div className="relative flex items-center justify-center gap-4 mb-4">
+                <div className="p-3 rounded-full bg-gradient-primary shadow-glow">
+                  <Bot className="w-8 h-8 text-primary-foreground" />
+                </div>
+                <h2 className="font-baskerville text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                  Your AI Farm Assistant
+                </h2>
+              </div>
+            </div>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Experience the future of farm-to-table shopping. Our advanced AI assistant understands your needs and connects you with the perfect local farms for fresh, seasonal produce.
+            </p>
+          </div>
+          
+          <div className="max-w-4xl mx-auto">
+            <div className="relative">
+              {/* Glassmorphism container */}
+              <div className="absolute inset-0 bg-gradient-subtle/20 backdrop-blur-sm rounded-2xl border border-border/50"></div>
+              <div className="absolute inset-0 bg-gradient-primary/5 rounded-2xl"></div>
+              
+              {/* Chat Interface */}
+              <div className="relative p-8">
+                <ChatInterface
+                  onFarmsHighlight={setHighlightedFarms}
+                  onSearchQuery={setSearchQuery}
+                  selectedFarm={selectedFarm}
+                />
+              </div>
+            </div>
           </div>
         </div>
 
