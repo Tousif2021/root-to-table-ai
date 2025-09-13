@@ -8,7 +8,7 @@ import { Farm } from '@/types/farm';
 import { cn } from '@/lib/utils';
 
 interface GlobalChatbotProps {
-  onFarmsHighlight?: (farmIds: string[]) => void;
+  onFarmsHighlight?: (farms: Farm[]) => void;
   onSearchQuery?: (query: string) => void;
   selectedFarm?: Farm | null;
 }
@@ -35,9 +35,9 @@ const GlobalChatbot: React.FC<GlobalChatbotProps> = ({
   }, []);
 
   // Default handlers for when the chatbot is used on non-map pages
-  const handleFarmsHighlight = (farmIds: string[]) => {
+  const handleFarmsHighlight = (farms: Farm[]) => {
     if (onFarmsHighlight) {
-      onFarmsHighlight(farmIds);
+      onFarmsHighlight(farms);
     }
   };
 

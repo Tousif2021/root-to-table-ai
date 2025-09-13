@@ -12,7 +12,7 @@ import processSteps from '@/assets/process-steps.png';
 import { mockFarms } from '@/data/farmData';
 import { Farm } from '@/types/farm';
 const Index = () => {
-  const [highlightedFarms, setHighlightedFarms] = useState<string[]>([]);
+  const [highlightedFarms, setHighlightedFarms] = useState<Farm[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedFarm, setSelectedFarm] = useState<Farm | null>(null);
 

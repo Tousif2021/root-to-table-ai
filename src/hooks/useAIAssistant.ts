@@ -15,7 +15,7 @@ interface ParsedRequest {
 
 interface AIResponse {
   text: string;
-  suggestedFarms: string[];
+  suggestedFarms: Farm[];
   searchQuery?: string;
 }
 
@@ -156,7 +156,7 @@ export const useAIAssistant = () => {
       setIsProcessing(false);
       return {
         text: predefinedResponse.response,
-        suggestedFarms: predefinedResponse.suggestedFarms,
+        suggestedFarms: predefinedResponse.suggestedFarms.map(id => mockFarms.find(f => f.id === id)).filter(Boolean) as Farm[],
         searchQuery: predefinedResponse.searchQuery
       };
     }
@@ -213,7 +213,7 @@ export const useAIAssistant = () => {
     
     return {
       text: response,
-      suggestedFarms: matchingFarms.map(f => f.id),
+      suggestedFarms: matchingFarms,
       searchQuery: parsedRequest.items.map(i => i.type).join(', ')
     };
   }, [findPredefinedResponse, parseRequest, findMatchingFarms, calculateEcoSavings]);

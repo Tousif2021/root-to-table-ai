@@ -1,89 +1,120 @@
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { MessageCircle, Send, Sprout, ArrowRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useAIAssistant } from '@/hooks/useAIAssistant';
-import { Farm } from '@/types/farm';
-import { useNavigate } from 'react-router-dom';
-import { mockFarms } from '@/data/farmData';
+import React, { useState, useRef, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { MessageCircle, Send } from "lucide-react";
+import { useAIAssistant } from "@/hooks/useAIAssistant";
+import { Farm } from "@/types/farm";
+import { useNavigate } from "react-router-dom";
+import { ChatBubble } from "@/components/ChatBubble";
+import { FarmSuggestionCard } from "@/components/FarmSuggestionCard";
+import { TypingIndicator } from "@/components/TypingIndicator";
 
 interface Message {
+  id: string;
   type: 'user' | 'ai' | 'farms';
   content: string;
   timestamp: Date;
-  suggestedFarms?: string[];
+  suggestedFarms?: Farm[];
 }
 
 interface ChatInterfaceProps {
-  onFarmsHighlight: (farmIds: string[]) => void;
-  onSearchQuery: (query: string) => void;
+  onFarmsHighlight?: (farms: Farm[]) => void;
+  onSearchQuery?: (query: string) => void;
   selectedFarm?: Farm | null;
 }
+
+const predefinedSuggestions = [
+  "What vegetables are in season?",
+  "Find organic farms nearby",
+  "Show me local dairy farms",
+  "Best produce for salads"
+];
 
 const ChatInterface: React.FC<ChatInterfaceProps> = ({ 
   onFarmsHighlight, 
   onSearchQuery,
   selectedFarm 
 }) => {
-  const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
   const { generateResponse, isProcessing } = useAIAssistant();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  const generateFarmUrl = (farmName: string) => {
-    return farmName.toLowerCase()
-      .replace(/[^a-z0-9\s]/g, '') // Remove special characters
-      .replace(/\s+/g, '-')        // Replace spaces with hyphens
-      .replace(/-+/g, '-')         // Remove multiple consecutive hyphens
-      .replace(/^-|-$/g, '');      // Remove leading/trailing hyphens
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const handleVisitFarm = (farmName: string) => {
-    const farmUrl = generateFarmUrl(farmName);
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isTyping]);
+
+  const handleVisitFarm = (farm: Farm) => {
+    const farmUrl = farm.name
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
     navigate(`/order/${farmUrl}`);
   };
 
   const handleSend = async () => {
-    if (!input.trim() || isProcessing) return;
+    if (!input.trim()) return;
 
-    const currentInput = input;
-    setInput('');
-
-    // Add user message to chat
     const userMessage: Message = {
+      id: Date.now().toString(),
       type: 'user',
-      content: currentInput,
-      timestamp: new Date()
+      content: input.trim(),
+      timestamp: new Date(),
     };
+
     setMessages(prev => [...prev, userMessage]);
+    setInput("");
+    setIsTyping(true);
 
     try {
-      const aiResponse = await generateResponse(currentInput);
-      
-      // Add AI response to chat
+      const response = await generateResponse(input.trim());
+      setIsTyping(false);
+
       const aiMessage: Message = {
+        id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: aiResponse.text,
+        content: response.text,
         timestamp: new Date(),
-        suggestedFarms: aiResponse.suggestedFarms
       };
+
       setMessages(prev => [...prev, aiMessage]);
-      
-      // Highlight farms on map
-      if (aiResponse.suggestedFarms && aiResponse.suggestedFarms.length > 0) {
-        onFarmsHighlight(aiResponse.suggestedFarms);
+
+      if (response.suggestedFarms && response.suggestedFarms.length > 0) {
+        const farmsMessage: Message = {
+          id: (Date.now() + 2).toString(),
+          type: 'farms',
+          content: '',
+          timestamp: new Date(),
+          suggestedFarms: response.suggestedFarms,
+        };
+
+        setMessages(prev => [...prev, farmsMessage]);
+
+        // Highlight farms on map if callback is provided
+        if (onFarmsHighlight) {
+          onFarmsHighlight(response.suggestedFarms);
+        }
       }
-      
-      // Update search query
-      if (aiResponse.searchQuery) {
-        onSearchQuery(aiResponse.searchQuery);
+
+      if (response.searchQuery && onSearchQuery) {
+        onSearchQuery(response.searchQuery);
       }
     } catch (error) {
+      console.error('Error generating response:', error);
+      setIsTyping(false);
       const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: "Sorry, I encountered an error. Please try again!",
-        timestamp: new Date()
+        content: "I'm sorry, I encountered an error. Please try again.",
+        timestamp: new Date(),
       };
       setMessages(prev => [...prev, errorMessage]);
     }
@@ -96,159 +127,109 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     }
   };
 
-  const getSuggestedFarmDetails = (farmIds: string[] = []) => {
-    return farmIds.map(farmId => 
-      mockFarms.find(farm => farm.id === farmId)
-    ).filter(Boolean) as Farm[];
-  };
-
   return (
-    <div className="w-full max-w-2xl mx-auto h-full flex flex-col">
-      {/* Chat Messages Container - Scrollable */}
-      <div className="flex-1 overflow-hidden">
+    <div className="h-full flex flex-col bg-gradient-to-b from-white via-green-50/30 to-green-100/50">
+      {/* AI Assistant Header */}
+      <div className="px-6 py-4 border-b bg-white/80 backdrop-blur-sm">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-md">
+            🌱
+          </div>
+          <div>
+            <h3 className="font-semibold text-gray-900">AI Farm Assistant</h3>
+            <p className="text-sm text-gray-600">Your personal guide to fresh, local produce</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Messages Area */}
+      <div className="flex-1 overflow-y-auto">
         {messages.length > 0 ? (
-          <div className="relative h-full">
-            <div className="absolute inset-0 bg-gradient-earth opacity-10 blur-sm"></div>
-            <div className="relative bg-background/80 backdrop-blur-sm border border-border/50 rounded-2xl h-full flex flex-col shadow-soft">
-              <div className="flex-1 overflow-y-auto p-6 space-y-4">
-                {messages.map((message, index) => (
-                  <div
-                    key={index}
-                    className={`flex ${
-                      message.type === 'user' ? 'justify-end' : 'justify-start'
-                    } animate-fade-in`}
-                  >
-                    <div
-                      className={`max-w-[80%] p-4 rounded-2xl ${
-                        message.type === 'user'
-                          ? 'bg-primary text-primary-foreground shadow-medium'
-                          : 'bg-muted/50 text-foreground border border-border/30'
-                      }`}
-                    >
-                      <p className="text-sm leading-relaxed">{message.content}</p>
-                      <p className="text-xs opacity-70 mt-2">
-                        {message.timestamp.toLocaleTimeString()}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-                
-                {/* Show suggested farms if any */}
-                {messages.some(m => m.suggestedFarms && m.suggestedFarms.length > 0) && (
-                  <div className="mt-6 space-y-4">
-                    <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                      <Sprout className="w-4 h-4" />
-                      Recommended Farms
-                    </h4>
-                    <div className="grid gap-3">
-                      {messages
-                        .filter(m => m.suggestedFarms && m.suggestedFarms.length > 0)
-                        .slice(-1)[0]?.suggestedFarms?.map((farmId, farmIndex) => {
-                          const farm = getSuggestedFarmDetails([farmId])[0];
-                          if (!farm) return null;
-                          return (
-                            <div
-                              key={farmIndex}
-                              className="bg-background/60 border border-border/40 rounded-xl p-4 hover:border-primary/30 transition-colors"
-                            >
-                              <div className="flex justify-between items-start mb-2">
-                                <h5 className="font-medium text-foreground">{farm.name}</h5>
-                                <span className="text-xs text-muted-foreground bg-muted/50 px-2 py-1 rounded-full">
-                                  {farm.distance}
-                                </span>
-                              </div>
-                              <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-                                Available: {farm.produce.slice(0, 3).map(p => typeof p === 'string' ? p : p.type).join(', ')}
-                              </p>
-                              <div className="flex justify-between items-center">
-                                <div className="flex gap-1">
-                                  {farm.produce.slice(0, 2).map((item, specIndex) => (
-                                    <span
-                                      key={specIndex}
-                                      className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full"
-                                    >
-                                      {typeof item === 'string' ? item : item.type}
-                                    </span>
-                                  ))}
-                                </div>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => handleVisitFarm(farm.name)}
-                                  className="text-xs border-primary/30 hover:bg-primary/10"
-                                >
-                                  Visit Farm
-                                </Button>
-                              </div>
-                            </div>
-                          );
-                        })}
+          <div className="p-4 space-y-1">
+            {messages.map((message) => (
+              <div key={message.id}>
+                {(message.type === 'user' || message.type === 'ai') && (
+                  <ChatBubble
+                    message={message.content}
+                    isUser={message.type === 'user'}
+                    timestamp={message.timestamp}
+                  />
+                )}
+
+                {message.type === 'farms' && message.suggestedFarms && (
+                  <div className="mb-4 pl-11">
+                    <div className="grid gap-3 max-w-md">
+                      {message.suggestedFarms.map((farm) => (
+                        <FarmSuggestionCard
+                          key={farm.id}
+                          farm={farm}
+                          onVisitFarm={handleVisitFarm}
+                        />
+                      ))}
                     </div>
                   </div>
                 )}
               </div>
-            </div>
+            ))}
+            
+            {/* Typing Indicator */}
+            {isTyping && <TypingIndicator />}
+            
+            <div ref={messagesEndRef} />
           </div>
         ) : (
           <div className="flex items-end justify-center pb-8">
             <div className="text-center space-y-3">
-              <MessageCircle className="w-8 h-8 text-muted-foreground/40 mx-auto" />
-              <p className="text-sm text-muted-foreground/70">Ask me about farms, produce, or seasonal recommendations</p>
-              <p className="text-xs text-muted-foreground/50">Your conversation will appear above</p>
+              <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto">
+                🌱
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground/70 mb-1">Hi! I'm your AI farm assistant</p>
+                <p className="text-xs text-muted-foreground/50">Ask me about farms, produce, or seasonal recommendations</p>
+              </div>
             </div>
           </div>
         )}
       </div>
 
-      {/* Suggestion Chips - Above Input */}
-      <div className="py-4">
-        <div className="flex flex-wrap gap-2 justify-center">
-          {['What vegetables are in season?', 'Find organic farms nearby', 'Show me local dairy farms', 'Best produce for salads'].map((suggestion) => (
-            <Button
-              key={suggestion}
-              variant="outline"
-              size="sm"
-              onClick={() => setInput(suggestion)}
-              className="text-xs border-primary/20 hover:border-primary/40 hover:bg-primary/5 text-muted-foreground hover:text-foreground transition-colors"
-            >
-              {suggestion}
-            </Button>
-          ))}
-        </div>
-      </div>
-
-      {/* AI-Enhanced Input Area - Fixed at Bottom */}
-      <div className="relative">
-        <div className="absolute inset-0 bg-gradient-primary opacity-20 blur-lg"></div>
-        <div className="relative bg-background/95 backdrop-blur-sm border border-primary/20 rounded-2xl p-6 shadow-glow">
-          <div className="flex items-center gap-3 mb-4">
-            <MessageCircle className="w-5 h-5 text-primary" />
-            <span className="text-sm font-medium text-muted-foreground">
-              AI-Enhanced Farm Assistant
-            </span>
+      {/* Suggestion Chips */}
+      {messages.length === 0 && (
+        <div className="px-4 pb-3">
+          <div className="flex flex-wrap gap-2 justify-center">
+            {predefinedSuggestions.slice(0, 3).map((suggestion, index) => (
+              <button
+                key={index}
+                onClick={() => setInput(suggestion)}
+                className="px-3 py-1.5 text-xs bg-green-50 hover:bg-green-100 text-green-700 rounded-full border border-green-200 transition-colors"
+              >
+                {suggestion}
+              </button>
+            ))}
           </div>
-          
-          <div className="flex gap-3">
+        </div>
+      )}
+
+      {/* Input Area */}
+      <div className="p-4 bg-white/60 backdrop-blur-sm border-t border-green-100">
+        <div className="relative max-w-2xl mx-auto">
+          <div className="flex items-center gap-3 bg-white border border-green-200/60 rounded-full px-5 py-3 shadow-lg focus-within:shadow-xl focus-within:border-green-300 transition-all duration-200">
+            <MessageCircle className="w-4 h-4 text-green-600 flex-shrink-0" />
             <Input
               type="text"
-              placeholder="Ask me about seasonal produce, local farms, or get personalized recommendations..."
+              placeholder="Message your farm assistant..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={handleKeyPress}
-              className="flex-1 bg-background/50 border-primary/30 focus:border-primary/60 text-foreground placeholder:text-muted-foreground/70"
+              className="border-0 bg-transparent p-0 text-sm placeholder:text-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 flex-1"
               disabled={isProcessing}
             />
             <Button
               onClick={handleSend}
-              disabled={isProcessing || !input.trim()}
-              size="icon"
-              className="bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-md transition-all duration-300"
+              disabled={!input.trim() || isProcessing}
+              size="sm"
+              className="rounded-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-md hover:shadow-lg px-4 py-2 h-9 transition-all duration-200"
             >
-              {isProcessing ? (
-                <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-              ) : (
-                <Send className="w-4 h-4" />
-              )}
+              <Send className="w-4 h-4" />
             </Button>
           </div>
         </div>
