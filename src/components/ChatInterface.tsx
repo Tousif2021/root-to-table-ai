@@ -36,9 +36,12 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({
-      behavior: "smooth"
-    });
+    if (messagesEndRef.current) {
+      const messagesContainer = messagesEndRef.current.parentElement;
+      if (messagesContainer) {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+    }
   };
   useEffect(() => {
     scrollToBottom();
@@ -104,58 +107,58 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
       handleSend();
     }
   };
-  return <div className="h-full flex flex-col bg-gradient-to-b from-white via-green-50/30 to-green-100/50">
-      {/* AI Assistant Header */}
-      
+  return <div className="h-[600px] flex flex-col bg-gradient-to-b from-white via-green-50/30 to-green-100/50 overflow-hidden">
+      {/* Messages Container */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Messages Area */}
+        <div className="flex-1 overflow-y-auto">
+          {messages.length > 0 ? <div className="p-4 space-y-1">
+              {messages.map(message => <div key={message.id}>
+                  {(message.type === 'user' || message.type === 'ai') && <ChatBubble message={message.content} isUser={message.type === 'user'} timestamp={message.timestamp} />}
 
-      {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto">
-        {messages.length > 0 ? <div className="p-4 space-y-1">
-            {messages.map(message => <div key={message.id}>
-                {(message.type === 'user' || message.type === 'ai') && <ChatBubble message={message.content} isUser={message.type === 'user'} timestamp={message.timestamp} />}
+                  {message.type === 'farms' && message.suggestedFarms && <div className="mb-4 pl-11">
+                      <div className="grid gap-3 max-w-md">
+                        {message.suggestedFarms.map(farm => <FarmSuggestionCard key={farm.id} farm={farm} onVisitFarm={handleVisitFarm} />)}
+                      </div>
+                    </div>}
+                </div>)}
+              
+              {/* Typing Indicator */}
+              {isTyping && <TypingIndicator />}
+              
+              <div ref={messagesEndRef} />
+            </div> : <div className="flex items-end justify-center pb-8">
+              <div className="text-center space-y-3">
+                <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto">
+                  🌱
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground/70 mb-1">Hi! I'm your AI farm assistant</p>
+                  <p className="text-xs text-muted-foreground/50">Ask me about farms, produce, or seasonal recommendations</p>
+                </div>
+              </div>
+            </div>}
+        </div>
 
-                {message.type === 'farms' && message.suggestedFarms && <div className="mb-4 pl-11">
-                    <div className="grid gap-3 max-w-md">
-                      {message.suggestedFarms.map(farm => <FarmSuggestionCard key={farm.id} farm={farm} onVisitFarm={handleVisitFarm} />)}
-                    </div>
-                  </div>}
-              </div>)}
-            
-            {/* Typing Indicator */}
-            {isTyping && <TypingIndicator />}
-            
-            <div ref={messagesEndRef} />
-          </div> : <div className="flex items-end justify-center pb-8">
-            <div className="text-center space-y-3">
-              <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto">
-                🌱
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground/70 mb-1">Hi! I'm your AI farm assistant</p>
-                <p className="text-xs text-muted-foreground/50">Ask me about farms, produce, or seasonal recommendations</p>
-              </div>
+        {/* Suggestion Chips */}
+        {messages.length === 0 && <div className="px-4 pb-3 flex-shrink-0">
+            <div className="flex flex-wrap gap-2 justify-center">
+              {predefinedSuggestions.slice(0, 3).map((suggestion, index) => <button key={index} onClick={() => setInput(suggestion)} className="px-3 py-1.5 text-xs bg-green-50 hover:bg-green-100 text-green-700 rounded-full border border-green-200 transition-colors">
+                  {suggestion}
+                </button>)}
             </div>
           </div>}
-      </div>
 
-      {/* Suggestion Chips */}
-      {messages.length === 0 && <div className="px-4 pb-3">
-          <div className="flex flex-wrap gap-2 justify-center">
-            {predefinedSuggestions.slice(0, 3).map((suggestion, index) => <button key={index} onClick={() => setInput(suggestion)} className="px-3 py-1.5 text-xs bg-green-50 hover:bg-green-100 text-green-700 rounded-full border border-green-200 transition-colors">
-                {suggestion}
-              </button>)}
-          </div>
-        </div>}
-
-      {/* Input Area */}
-      <div className="p-4 bg-white/60 backdrop-blur-sm border-t border-green-100">
-        <div className="relative max-w-2xl mx-auto">
-          <div className="flex items-center gap-3 bg-white border border-green-200/60 rounded-full px-5 py-3 shadow-lg focus-within:shadow-xl focus-within:border-green-300 transition-all duration-200">
-            <MessageCircle className="w-4 h-4 text-green-600 flex-shrink-0" />
-            <Input type="text" placeholder="Message your farm assistant..." value={input} onChange={e => setInput(e.target.value)} onKeyPress={handleKeyPress} className="border-0 bg-transparent p-0 text-sm placeholder:text-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 flex-1" disabled={isProcessing} />
-            <Button onClick={handleSend} disabled={!input.trim() || isProcessing} size="sm" className="rounded-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-md hover:shadow-lg px-4 py-2 h-9 transition-all duration-200">
-              <Send className="w-4 h-4" />
-            </Button>
+        {/* Input Area */}
+        <div className="flex-shrink-0 p-4 bg-white/60 backdrop-blur-sm border-t border-green-100">
+          <div className="relative max-w-2xl mx-auto">
+            <div className="flex items-center gap-3 bg-white border border-green-200/60 rounded-full px-5 py-3 shadow-lg focus-within:shadow-xl focus-within:border-green-300 transition-all duration-200">
+              <MessageCircle className="w-4 h-4 text-green-600 flex-shrink-0" />
+              <Input type="text" placeholder="Message your farm assistant..." value={input} onChange={e => setInput(e.target.value)} onKeyPress={handleKeyPress} className="border-0 bg-transparent p-0 text-sm placeholder:text-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 flex-1" disabled={isProcessing} />
+              <Button onClick={handleSend} disabled={!input.trim() || isProcessing} size="sm" className="rounded-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-md hover:shadow-lg px-4 py-2 h-9 transition-all duration-200">
+                <Send className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>
