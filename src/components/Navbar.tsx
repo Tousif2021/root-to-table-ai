@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Home, Tractor, ShoppingCart, User, Sprout } from 'lucide-react';
+import { Home, Store, ShoppingCart, User } from 'lucide-react';
 
 const Navbar = () => {
   const location = useLocation();
@@ -12,25 +12,27 @@ const Navbar = () => {
   
   const navItems = [
     { name: 'Home', path: '/', icon: Home },
-    { name: 'Farms', path: '/farms', icon: Tractor },
+    { name: 'Shop', path: '/farms', icon: Store },
     { name: 'Cart', path: '/cart', icon: ShoppingCart },
     { name: 'Profile', path: '/profile', icon: User },
   ];
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md border-b border-border/50">
+    <nav className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur-xl border-b border-border/30 shadow-sm">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
-          {/* Logo and Company Name */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="p-2.5 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-smooth">
-              <Sprout className="w-6 h-6 text-primary" />
-            </div>
-            <span className="text-2xl font-baskerville font-bold text-foreground tracking-wide">ROOTED</span>
+          {/* Brand Name - Far Left */}
+          <Link to="/" className="group">
+            <span className="text-3xl font-baskerville font-black text-foreground tracking-tight hover:text-primary transition-colors duration-300">
+              ROOTED
+            </span>
           </Link>
 
           {/* Navigation Links */}
-          <div className="hidden md:flex items-center relative bg-background/60 backdrop-blur-lg rounded-full p-1.5 border border-border/50 shadow-lg">
+          <div className="hidden md:flex items-center relative bg-background/60 backdrop-blur-xl rounded-full p-2 border border-border/30 shadow-xl"
+               style={{
+                 boxShadow: '0 8px 32px hsl(var(--primary) / 0.1), inset 0 1px 0 hsl(var(--background) / 0.8)'
+               }}>
             {navItems.map((item) => {
               const Icon = item.icon;
               const active = isActive(item.path);
