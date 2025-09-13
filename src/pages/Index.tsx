@@ -16,31 +16,17 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedFarm, setSelectedFarm] = useState<Farm | null>(null);
 
-  const legacyFarms = [{
-    name: "Anna's Organic Farm",
-    distance: "12km away",
-    rating: 4.9,
-    specialties: ["Strawberries", "Leafy Greens", "Herbs"],
-    availability: "Available today",
-    sustainability: "high" as const,
-    description: "Family-run organic farm specializing in pesticide-free produce. Growing fresh vegetables for over 20 years."
-  }, {
-    name: "Green Valley Co-op",
-    distance: "8km away",
-    rating: 4.7,
-    specialties: ["Root Vegetables", "Potatoes", "Onions"],
-    availability: "Available tomorrow",
-    sustainability: "high" as const,
-    description: "Community-supported agriculture providing fresh, local produce to families across the region."
-  }, {
-    name: "Sunset Orchards",
-    distance: "15km away",
-    rating: 4.8,
-    specialties: ["Seasonal Fruits", "Apples", "Berries"],
-    availability: "Available weekends",
-    sustainability: "medium" as const,
-    description: "Traditional orchard focusing on heritage varieties and sustainable growing practices."
-  }];
+  // Convert mockFarms to the format needed for FarmCard component
+  const featuredFarms = mockFarms.slice(0, 6).map(farm => ({
+    name: farm.name,
+    distance: farm.distance,
+    rating: farm.rating,
+    specialties: farm.specialties,
+    availability: farm.pickupTimes[0] ? `Available ${farm.pickupTimes[0].toLowerCase()}` : 'Check availability',
+    sustainability: farm.ecoScore >= 8.5 ? 'high' as const : farm.ecoScore >= 7.5 ? 'medium' as const : 'low' as const,
+    description: farm.description,
+    imageUrl: farm.imageUrl
+  }));
 
   return <div>
       {/* Hero Section */}
@@ -123,7 +109,7 @@ const Index = () => {
           <h2 className="font-baskerville text-4xl font-bold text-foreground mb-8 text-center">Featured Local Farms</h2>
           <Carousel className="max-w-5xl mx-auto">
             <CarouselContent className="-ml-2 md:-ml-4">
-              {legacyFarms.map((farm, index) => <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+              {featuredFarms.map((farm, index) => <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
                   <FarmCard {...farm} />
                 </CarouselItem>)}
             </CarouselContent>
