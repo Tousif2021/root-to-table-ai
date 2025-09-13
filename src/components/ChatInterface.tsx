@@ -85,6 +85,12 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         if (onFarmsHighlight) {
           onFarmsHighlight(response.suggestedFarms);
         }
+
+        // Scroll to bottom after farm suggestions are added
+        setTimeout(() => scrollToBottom(), 100);
+      } else {
+        // Scroll to bottom for regular AI responses
+        setTimeout(() => scrollToBottom(), 50);
       }
       if (response.searchQuery && onSearchQuery) {
         onSearchQuery(response.searchQuery);
@@ -150,7 +156,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           </div>}
 
         {/* Input Area */}
-        <div className="flex-shrink-0 p-4 bg-white/60 backdrop-blur-sm border-t border-green-100">
+        <div className="flex-shrink-0 p-4 bg-gradient-to-b from-green-50/30 to-green-100/50 backdrop-blur-sm border-t border-green-100">
           <div className="relative max-w-2xl mx-auto">
             <div className="flex items-center gap-3 bg-white border border-green-200/60 rounded-full px-5 py-3 shadow-lg focus-within:shadow-xl focus-within:border-green-300 transition-all duration-200">
               <MessageCircle className="w-4 h-4 text-green-600 flex-shrink-0" />
