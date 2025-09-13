@@ -13,87 +13,93 @@ import {
 } from '@/components/ui/breadcrumb';
 import FarmerChat from '@/components/FarmerChat';
 import SustainabilityMetrics from '@/components/SustainabilityMetrics';
-import OrderSummary from '@/components/OrderSummary';
+import ProductCatalog from '@/components/ProductCatalog';
+import MiniCart from '@/components/MiniCart';
 import { ArrowLeft, MapPin, Star, Leaf, CheckCircle } from 'lucide-react';
+import { mockFarms } from '@/data/farmData';
+import { toast } from 'sonner';
+
+interface CartItem {
+  id: string;
+  name: string;
+  price: number;
+  unit: string;
+  quantity: number;
+  organic: boolean;
+  farmName: string;
+}
 
 const FarmOrder = () => {
   const { farmName } = useParams<{ farmName: string }>();
-  const [selectedDelivery, setSelectedDelivery] = useState<any>(null);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
-  // Mock farm data - in real app, this would come from API
-  const farmData = {
-    name: farmName?.replace('-', ' ') || "Anna's Organic Farm",
-    distance: "12km away",
-    rating: 4.9,
-    specialties: ["Strawberries", "Leafy Greens", "Herbs"],
-    availability: "Available today",
-    sustainability: "high" as const,
-    description: "Family-run organic farm specializing in pesticide-free produce. Growing fresh vegetables for over 20 years."
-  };
+  // Find the actual farm data based on URL parameter
+  const farm = mockFarms.find(f => 
+    f.name.toLowerCase().replace(/[^a-z0-9]/g, '-') === farmName
+  ) || mockFarms[0]; // Default to first farm if not found
 
   const sustainabilityData = {
     co2Saved: 12.4,
-    distanceSaved: 850,
-    localScore: 92,
-    ecosystemImpact: "Supporting 3 local families"
+    distanceSaved: parseInt(farm.distance.replace('km away', '')) * 2,
+    localScore: farm.ecoScore * 10,
+    ecosystemImpact: "Supporting local family farming"
   };
-
-  const orderItems = [
-    {
-      id: '1',
-      name: 'Strawberries',
-      quantity: '2kg',
-      price: 14.50,
-      farm: farmData.name,
-      freshness: 'today' as const
-    },
-    {
-      id: '2',
-      name: 'Potatoes',
-      quantity: '1kg',
-      price: 4.25,
-      farm: farmData.name,
-      freshness: 'yesterday' as const
-    }
-  ];
 
   const deliveryOptions = [
     {
       type: 'pickup' as const,
       label: 'Farm Pickup',
-      time: 'Today 2-6 PM',
+      time: farm.pickupTimes[0] || 'Today 2-6 PM',
       cost: 0,
-      location: farmData.name
+      location: farm.name
     },
     {
       type: 'hub' as const,
       label: 'Community Hub',
       time: 'Tomorrow 10-12 PM',
-      cost: 2.50,
+      cost: 25,
       location: 'Downtown Farmers Market'
     },
-    {
+    ...(farm.deliveryAvailable ? [{
       type: 'delivery' as const,
       label: 'Home Delivery',
       time: 'Tomorrow 3-7 PM',
-      cost: 8.00,
+      cost: 85,
       location: 'Your address'
-    }
+    }] : [])
   ];
 
-  const handleConfirmOrder = () => {
-    alert('Order confirmed! You will receive updates on your fresh produce delivery.');
+  const handleAddToCart = (product: any) => {
+    setCartItems(prev => {
+      const existing = prev.find(item => item.id === product.id);
+      if (existing) {
+        return prev.map(item =>
+          item.id === product.id 
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
+      return [...prev, { ...product, quantity: 1 }];
+    });
+    toast.success(`Added ${product.name} to cart`);
   };
 
-  const getSustainabilityColor = (level: string) => {
-    switch (level) {
-      case 'high':
-        return 'bg-primary text-primary-foreground';
-      case 'medium':
-        return 'bg-accent text-accent-foreground';
-      default:
-        return 'bg-muted text-muted-foreground';
-    }
+  const handleUpdateQuantity = (productId: string, quantity: number) => {
+    setCartItems(prev =>
+      prev.map(item =>
+        item.id === productId ? { ...item, quantity } : item
+      )
+    );
+  };
+
+  const handleRemoveFromCart = (productId: string) => {
+    setCartItems(prev => prev.filter(item => item.id !== productId));
+    toast.success('Item removed from cart');
+  };
+
+  const handleCheckout = () => {
+    toast.success('Redirecting to checkout...');
+    // Here you would redirect to a checkout page or payment processor
   };
 
   return (
@@ -114,7 +120,7 @@ const FarmOrder = () => {
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbPage className="text-foreground font-medium">
-                  {farmData.name}
+                  {farm.name}
                 </BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
@@ -131,26 +137,31 @@ const FarmOrder = () => {
             {/* About This Farm - Enhanced */}
             <Card className="overflow-hidden shadow-medium">
               {/* Farm Photo Banner */}
-              <div className="h-48 bg-gradient-to-r from-green-400 to-emerald-500 relative overflow-hidden">
-                <div className="absolute inset-0 bg-black/20"></div>
+              <div className="h-48 relative overflow-hidden">
+                <img 
+                  src={farm.imageUrl} 
+                  alt={`${farm.name} farm`}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
                 <div className="absolute bottom-4 left-6 right-6">
                   <div className="flex items-center justify-between">
-                    <div>
-                      <h2 className="text-2xl font-bold text-white mb-2 flex items-center gap-2">
-                        {farmData.name}
-                        <CheckCircle className="w-6 h-6 text-green-300" />
-                      </h2>
-                      <div className="flex items-center gap-4 text-white/90 text-sm">
-                        <div className="flex items-center gap-1">
-                          <MapPin className="w-4 h-4" />
-                          <span>{farmData.distance}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                          <span>{farmData.rating}</span>
-                        </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-white mb-2 flex items-center gap-2">
+                      {farm.name}
+                      <CheckCircle className="w-6 h-6 text-green-300" />
+                    </h2>
+                    <div className="flex items-center gap-4 text-white/90 text-sm">
+                      <div className="flex items-center gap-1">
+                        <MapPin className="w-4 h-4" />
+                        <span>{farm.distance}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                        <span>{farm.rating}</span>
                       </div>
                     </div>
+                  </div>
                     <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
                       <Leaf className="w-3 h-3 mr-1" />
                       Verified Organic ✅
@@ -160,13 +171,13 @@ const FarmOrder = () => {
               </div>
               
               <div className="p-6">
-                <p className="text-muted-foreground mb-4 leading-relaxed">{farmData.description}</p>
+                <p className="text-muted-foreground mb-4 leading-relaxed">{farm.description}</p>
                 
                 <div className="space-y-3">
                   <div className="flex items-start gap-3">
                     <span className="font-medium text-foreground min-w-[80px]">Specialties:</span>
                     <div className="flex flex-wrap gap-2">
-                      {farmData.specialties.map((specialty, index) => (
+                      {farm.specialties.map((specialty, index) => (
                         <Badge key={index} className="bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 transition-colors">
                           {specialty}
                         </Badge>
@@ -174,35 +185,50 @@ const FarmOrder = () => {
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="font-medium text-foreground min-w-[80px]">Status:</span>
-                    <Badge className="bg-green-100 text-green-800 border-green-300 dark:bg-green-900 dark:text-green-200">
-                      🟢 {farmData.availability}
+                    <span className="font-medium text-foreground min-w-[80px]">Eco Score:</span>
+                    <Badge className="bg-primary text-primary-foreground">
+                      🌱 {farm.ecoScore}/10
+                    </Badge>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="font-medium text-foreground min-w-[80px]">Pickup:</span>
+                    <Badge className="bg-secondary text-secondary-foreground">
+                      🕒 {farm.pickupTimes[0]}
                     </Badge>
                   </div>
                 </div>
               </div>
             </Card>
 
-            {/* Chat with Farmer - Replace AI Assistant */}
+            {/* Chat with Farmer */}
             <FarmerChat 
-              farmerName="Anna Thompson" 
-              farmName={farmData.name}
+              farmerName={farm.name.split(' ')[0]} 
+              farmName={farm.name}
               farmerAvatar="/placeholder.svg" 
             />
           </div>
 
-          {/* Right Column - Impact and Order Summary */}
+          {/* Right Column - Product Catalog and Cart */}
           <div className="space-y-8">
             {/* Your Impact - Enhanced 2x2 Grid */}
             <SustainabilityMetrics data={sustainabilityData} />
             
-            {/* Order Summary - Premium Checkout */}
-            <OrderSummary 
-              items={orderItems}
+            {/* Product Catalog */}
+            <ProductCatalog
+              farm={farm}
+              cartItems={cartItems}
+              onAddToCart={handleAddToCart}
+              onUpdateQuantity={handleUpdateQuantity}
+              onRemoveFromCart={handleRemoveFromCart}
+            />
+            
+            {/* Mini Cart */}
+            <MiniCart
+              cartItems={cartItems}
               deliveryOptions={deliveryOptions}
-              selectedDelivery={selectedDelivery}
-              onDeliverySelect={setSelectedDelivery}
-              onConfirmOrder={handleConfirmOrder}
+              onUpdateQuantity={handleUpdateQuantity}
+              onRemoveFromCart={handleRemoveFromCart}
+              onCheckout={handleCheckout}
             />
           </div>
         </div>
