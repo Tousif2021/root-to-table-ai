@@ -3,9 +3,9 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Leaf, Star } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { MapPin, Leaf, Star, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import ChatInterface from './ChatInterface';
 
 export interface Farm {
   id: string;
@@ -49,12 +49,27 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
     navigate(`/order/${encodeURIComponent(farm.name)}`);
   };
 
-  const handleFarmsHighlight = (farmIds: string[]) => {
-    setHighlightedFarms(farmIds);
+  const searchFarms = (query: string) => {
+    if (!query.trim()) {
+      setHighlightedFarms([]);
+      setSearchQuery('');
+      return;
+    }
+
+    const matchingFarms = farms.filter(farm => 
+      farm.produce.some(produce => 
+        produce.available && 
+        produce.type.toLowerCase().includes(query.toLowerCase())
+      )
+    );
+
+    setHighlightedFarms(matchingFarms.map(farm => farm.id));
+    setSearchQuery(query);
   };
 
-  const handleSearchQuery = (query: string) => {
-    setSearchQuery(query);
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    searchFarms(query);
   };
 
   useEffect(() => {
@@ -109,13 +124,25 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
     <div className="relative w-full h-[700px] rounded-lg overflow-hidden shadow-soft">
       <div ref={mapContainer} className="absolute inset-0" />
       
-      {/* Chat Interface */}
-      <div className="absolute bottom-4 left-4 w-96 z-10">
-        <ChatInterface
-          onFarmsHighlight={handleFarmsHighlight}
-          onSearchQuery={handleSearchQuery}
-          selectedFarm={selectedFarm}
-        />
+      {/* Search Bar */}
+      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
+        <div className="bg-card/95 backdrop-blur-sm border border-border rounded-full px-4 py-2 shadow-soft min-w-[400px]">
+          <div className="flex items-center gap-3">
+            <Search className="w-5 h-5 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="Search for produce (e.g. strawberries, carrots...)"
+              value={searchQuery}
+              onChange={handleSearchChange}
+              className="border-0 bg-transparent focus-visible:ring-0 text-foreground placeholder:text-muted-foreground"
+            />
+          </div>
+          {highlightedFarms.length > 0 && (
+            <div className="mt-2 text-xs text-muted-foreground text-center">
+              Found {highlightedFarms.length} farm{highlightedFarms.length !== 1 ? 's' : ''} with matching produce
+            </div>
+          )}
+        </div>
       </div>
       
       {selectedFarm && (
