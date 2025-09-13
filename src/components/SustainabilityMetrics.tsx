@@ -12,67 +12,85 @@ interface SustainabilityData {
 
 const SustainabilityMetrics: React.FC<{ data: SustainabilityData }> = ({ data }) => {
   return (
-    <Card className="p-4 bg-gradient-subtle border-border shadow-soft">
-      <div className="flex items-center gap-2 mb-4">
-        <div className="p-2 rounded-full bg-primary/10">
-          <Globe className="w-5 h-5 text-primary" />
+    <Card className="p-6 bg-gradient-subtle border-border shadow-soft">
+      <div className="text-center mb-6">
+        <h3 className="text-xl font-semibold text-foreground mb-2">Your Impact</h3>
+        <p className="text-sm text-muted-foreground">Every local purchase makes a difference</p>
+      </div>
+
+      {/* 2x2 Grid of Impact Metrics */}
+      <div className="grid grid-cols-2 gap-4 mb-6">
+        {/* CO₂ Saved - Circular Progress */}
+        <div className="text-center p-4 bg-white/50 dark:bg-black/20 rounded-xl border border-white/60 dark:border-green-800/30">
+          <div className="relative w-16 h-16 mx-auto mb-3">
+            <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 64 64">
+              <circle
+                cx="32"
+                cy="32"
+                r="28"
+                stroke="currentColor"
+                strokeWidth="4"
+                fill="none"
+                className="text-muted-foreground/20"
+              />
+              <circle
+                cx="32"
+                cy="32"
+                r="28"
+                stroke="currentColor"
+                strokeWidth="4"
+                fill="none"
+                strokeDasharray={`${2 * Math.PI * 28}`}
+                strokeDashoffset={`${2 * Math.PI * 28 * (1 - 0.75)}`}
+                className="text-primary transition-all duration-1000 ease-out"
+                strokeLinecap="round"
+              />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Globe className="w-6 h-6 text-primary" />
+            </div>
+          </div>
+          <div className="text-lg font-bold text-primary">{data.co2Saved}kg</div>
+          <div className="text-xs text-muted-foreground">CO₂ Saved</div>
         </div>
-        <div>
-          <h3 className="font-semibold text-foreground">Your Environmental Impact</h3>
-          <p className="text-sm text-muted-foreground">Shopping local makes a difference</p>
+
+        {/* Miles Saved - Animated Counter */}
+        <div className="text-center p-4 bg-white/50 dark:bg-black/20 rounded-xl border border-white/60 dark:border-green-800/30">
+          <div className="w-16 h-16 mx-auto mb-3 bg-accent/20 rounded-full flex items-center justify-center">
+            <Truck className="w-6 h-6 text-accent" />
+          </div>
+          <div className="text-lg font-bold text-accent animate-fade-in">{data.distanceSaved}</div>
+          <div className="text-xs text-muted-foreground">Miles Saved</div>
+        </div>
+
+        {/* Local Farms Supported - Badge */}
+        <div className="text-center p-4 bg-white/50 dark:bg-black/20 rounded-xl border border-white/60 dark:border-green-800/30">
+          <div className="w-16 h-16 mx-auto mb-3 bg-primary/20 rounded-full flex items-center justify-center">
+            <TreePine className="w-6 h-6 text-primary" />
+          </div>
+          <div className="text-lg font-bold text-primary">3</div>
+          <div className="text-xs text-muted-foreground">Farms Supported</div>
+        </div>
+
+        {/* Ecosystem Impact - Progress Bar */}
+        <div className="text-center p-4 bg-white/50 dark:bg-black/20 rounded-xl border border-white/60 dark:border-green-800/30">
+          <div className="w-16 h-16 mx-auto mb-3 bg-green-500/20 rounded-full flex items-center justify-center">
+            <Leaf className="w-6 h-6 text-green-600" />
+          </div>
+          <div className="space-y-2">
+            <Progress value={data.localScore} className="h-2 bg-muted" />
+            <div className="text-sm font-medium text-green-600">{data.localScore}% Impact</div>
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Leaf className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium">CO₂ Saved</span>
-            </div>
-            <span className="text-lg font-bold text-primary">{data.co2Saved}kg</span>
-          </div>
-          <p className="text-xs text-muted-foreground">vs imported produce</p>
-        </div>
-
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Truck className="w-4 h-4 text-accent" />
-              <span className="text-sm font-medium">Miles Saved</span>
-            </div>
-            <span className="text-lg font-bold text-accent">{data.distanceSaved}</span>
-          </div>
-          <p className="text-xs text-muted-foreground">transport distance</p>
-        </div>
-
-        <div className="space-y-3">
-          <div className="flex items-center gap-2">
-            <TreePine className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium">Local Impact Score</span>
-          </div>
-          <div className="space-y-1">
-            <Progress value={data.localScore} className="h-2" />
-            <div className="flex justify-between text-xs text-muted-foreground">
-              <span>Good</span>
-              <span className="font-medium">{data.localScore}%</span>
-              <span>Excellent</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded-full bg-primary"></div>
-            <span className="text-sm font-medium">Ecosystem Impact</span>
-          </div>
-          <p className="text-sm text-primary font-medium">{data.ecosystemImpact}</p>
-        </div>
-      </div>
-
-      <div className="mt-4 p-3 bg-primary/5 rounded-lg border border-primary/20">
-        <p className="text-sm text-primary font-medium">
-          🌱 Great choice! Your order supports {Math.floor(data.co2Saved / 2)} local farming families
+      {/* Motivational Message */}
+      <div className="text-center p-4 bg-gradient-to-r from-primary/10 to-green-500/10 rounded-xl border border-primary/20">
+        <p className="text-sm font-medium text-primary">
+          🌳 Great choice! You saved the same CO₂ as planting 2 trees
+        </p>
+        <p className="text-xs text-muted-foreground mt-1">
+          {data.ecosystemImpact} through your local shopping
         </p>
       </div>
     </Card>

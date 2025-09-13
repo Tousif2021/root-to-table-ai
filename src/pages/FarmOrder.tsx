@@ -3,10 +3,18 @@ import { useParams, Link } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import ChatInterface from '@/components/ChatInterface';
+import { 
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import FarmerChat from '@/components/FarmerChat';
 import SustainabilityMetrics from '@/components/SustainabilityMetrics';
 import OrderSummary from '@/components/OrderSummary';
-import { ArrowLeft, MapPin, Star, Leaf } from 'lucide-react';
+import { ArrowLeft, MapPin, Star, Leaf, CheckCircle } from 'lucide-react';
 
 const FarmOrder = () => {
   const { farmName } = useParams<{ farmName: string }>();
@@ -90,92 +98,112 @@ const FarmOrder = () => {
 
   return (
     <main className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="bg-card border-b border-border">
-        <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex items-center gap-4">
-            <Button variant="outline" size="sm" asChild>
-              <Link to="/">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Farms
-              </Link>
-            </Button>
-            <div className="flex-1">
-              <h1 className="text-2xl font-bold text-foreground">Order from {farmData.name}</h1>
-              <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
-                <div className="flex items-center gap-1">
-                  <MapPin className="w-4 h-4" />
-                  <span>{farmData.distance}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Star className="w-4 h-4 fill-accent text-accent" />
-                  <span>{farmData.rating}</span>
-                </div>
-                <Badge className={getSustainabilityColor(farmData.sustainability)}>
-                  <Leaf className="w-3 h-3 mr-1" />
-                  Eco+
-                </Badge>
-              </div>
-            </div>
-          </div>
+      {/* Breadcrumb Navigation */}
+      <div className="bg-card border-b border-border">
+        <div className="max-w-6xl mx-auto px-4 py-3">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link to="/" className="flex items-center gap-1 text-primary hover:text-primary-glow transition-colors">
+                    <ArrowLeft className="w-4 h-4" />
+                    Back to Farms
+                  </Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage className="text-foreground font-medium">
+                  {farmData.name}
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
         </div>
-      </header>
+      </div>
 
-      {/* Main Content */}
-      <section className="max-w-6xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+      {/* Main Content - Premium 2-Column Layout */}
+      <section className="max-w-7xl mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           
-          {/* Left Column - Farm Info and Chat */}
+          {/* Left Column - Farm Info, Chat, and Impact */}
           <div className="space-y-8">
-            {/* Farm Details */}
-            <Card className="p-6">
-              <h2 className="text-xl font-semibold mb-3 text-foreground">About This Farm</h2>
-              <p className="text-muted-foreground mb-4">{farmData.description}</p>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm">
-                  <span className="font-medium text-foreground">Specialties:</span>
-                  <div className="flex flex-wrap gap-1">
-                    {farmData.specialties.map((specialty, index) => (
-                      <Badge key={index} variant="outline" className="text-xs">
-                        {specialty}
-                      </Badge>
-                    ))}
+            {/* About This Farm - Enhanced */}
+            <Card className="overflow-hidden shadow-medium">
+              {/* Farm Photo Banner */}
+              <div className="h-48 bg-gradient-to-r from-green-400 to-emerald-500 relative overflow-hidden">
+                <div className="absolute inset-0 bg-black/20"></div>
+                <div className="absolute bottom-4 left-6 right-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h2 className="text-2xl font-bold text-white mb-2 flex items-center gap-2">
+                        {farmData.name}
+                        <CheckCircle className="w-6 h-6 text-green-300" />
+                      </h2>
+                      <div className="flex items-center gap-4 text-white/90 text-sm">
+                        <div className="flex items-center gap-1">
+                          <MapPin className="w-4 h-4" />
+                          <span>{farmData.distance}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                          <span>{farmData.rating}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
+                      <Leaf className="w-3 h-3 mr-1" />
+                      Verified Organic ✅
+                    </Badge>
                   </div>
                 </div>
-                <div className="text-sm">
-                  <span className="font-medium text-foreground">Availability:</span>
-                  <span className="text-muted-foreground ml-2">{farmData.availability}</span>
+              </div>
+              
+              <div className="p-6">
+                <p className="text-muted-foreground mb-4 leading-relaxed">{farmData.description}</p>
+                
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3">
+                    <span className="font-medium text-foreground min-w-[80px]">Specialties:</span>
+                    <div className="flex flex-wrap gap-2">
+                      {farmData.specialties.map((specialty, index) => (
+                        <Badge key={index} className="bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 transition-colors">
+                          {specialty}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="font-medium text-foreground min-w-[80px]">Status:</span>
+                    <Badge className="bg-green-100 text-green-800 border-green-300 dark:bg-green-900 dark:text-green-200">
+                      🟢 {farmData.availability}
+                    </Badge>
+                  </div>
                 </div>
               </div>
             </Card>
 
-            {/* AI Chat Interface */}
-            <div>
-              <h2 className="text-2xl font-bold text-foreground mb-4">Order with AI Assistant</h2>
-              <ChatInterface 
-                onFarmsHighlight={() => {}} // No-op for single farm page
-                onSearchQuery={() => {}} // No-op for single farm page
-              />
-            </div>
+            {/* Chat with Farmer - Replace AI Assistant */}
+            <FarmerChat 
+              farmerName="Anna Thompson" 
+              farmName={farmData.name}
+              farmerAvatar="/placeholder.svg" 
+            />
           </div>
 
-          {/* Right Column - Sustainability and Order */}
+          {/* Right Column - Impact and Order Summary */}
           <div className="space-y-8">
-            <div>
-              <h2 className="text-2xl font-bold text-foreground mb-4">Your Impact</h2>
-              <SustainabilityMetrics data={sustainabilityData} />
-            </div>
+            {/* Your Impact - Enhanced 2x2 Grid */}
+            <SustainabilityMetrics data={sustainabilityData} />
             
-            <div>
-              <h2 className="text-2xl font-bold text-foreground mb-4">Current Order</h2>
-              <OrderSummary 
-                items={orderItems}
-                deliveryOptions={deliveryOptions}
-                selectedDelivery={selectedDelivery}
-                onDeliverySelect={setSelectedDelivery}
-                onConfirmOrder={handleConfirmOrder}
-              />
-            </div>
+            {/* Order Summary - Premium Checkout */}
+            <OrderSummary 
+              items={orderItems}
+              deliveryOptions={deliveryOptions}
+              selectedDelivery={selectedDelivery}
+              onDeliverySelect={setSelectedDelivery}
+              onConfirmOrder={handleConfirmOrder}
+            />
           </div>
         </div>
       </section>
