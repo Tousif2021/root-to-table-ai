@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MessageCircle, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import ChatInterface from './ChatInterface';
 import { Farm } from './InteractiveMap';
 import { cn } from '@/lib/utils';
@@ -16,15 +18,21 @@ const GlobalChatbot: React.FC<GlobalChatbotProps> = ({
   onSearchQuery, 
   selectedFarm 
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
-  const handleToggle = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const handleClose = () => {
-    setIsOpen(false);
-  };
+  // Check if device is mobile
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkIsMobile();
+    window.addEventListener('resize', checkIsMobile);
+    
+    return () => window.removeEventListener('resize', checkIsMobile);
+  }, []);
 
   // Default handlers for when the chatbot is used on non-map pages
   const handleFarmsHighlight = (farmIds: string[]) => {
@@ -39,58 +47,83 @@ const GlobalChatbot: React.FC<GlobalChatbotProps> = ({
     }
   };
 
+  const handleClose = () => {
+    setIsDrawerOpen(false);
+    setIsPopoverOpen(false);
+  };
+
+  // Floating Button Component
+  const FloatingChatButton = () => (
+    <Button
+      className={cn(
+        "fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full shadow-glow transition-smooth",
+        "bg-gradient-primary text-primary-foreground",
+        "hover:scale-110 hover:shadow-glow animate-pulse",
+        "border-2 border-white/20"
+      )}
+    >
+      <MessageCircle className="w-6 h-6" />
+    </Button>
+  );
+
+  // Chat Content Component
+  const ChatContent = () => (
+    <div className="h-full">
+      <ChatInterface
+        onFarmsHighlight={handleFarmsHighlight}
+        onSearchQuery={handleSearchQuery}
+        selectedFarm={selectedFarm}
+      />
+    </div>
+  );
+
   return (
     <>
-      {/* Toggle Button */}
-      <Button
-        onClick={handleToggle}
-        className={cn(
-          "fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full shadow-elegant transition-all duration-300",
-          "bg-primary hover:bg-primary-glow text-primary-foreground",
-          "hover:scale-110 hover:shadow-glow",
-          isOpen && "opacity-0 pointer-events-none"
-        )}
-        size="sm"
-      >
-        <MessageCircle className="w-5 h-5" />
-      </Button>
-
-      {/* Chatbot Overlay */}
-      <div
-        className={cn(
-          "fixed inset-y-0 right-0 z-50 w-96 bg-background/95 backdrop-blur-sm border-l border-border shadow-elegant transition-all duration-300 ease-out",
-          isOpen ? "translate-x-0" : "translate-x-full"
-        )}
-      >
-        {/* Header with Close Button */}
-        <div className="flex items-center justify-between p-4 border-b border-border bg-gradient-primary text-primary-foreground">
-          <h2 className="font-semibold">AI Assistant</h2>
-          <Button
-            onClick={handleClose}
-            variant="ghost"
-            size="sm"
-            className="text-primary-foreground hover:bg-white/20 w-8 h-8 p-0"
+      {isMobile ? (
+        // Mobile: Bottom Drawer
+        <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+          <DrawerTrigger asChild>
+            <FloatingChatButton />
+          </DrawerTrigger>
+          <DrawerContent className="h-[85vh] bg-background border-border">
+            <DrawerHeader className="border-b border-border bg-gradient-primary text-primary-foreground">
+              <DrawerTitle className="text-center">AI Farm Assistant</DrawerTitle>
+            </DrawerHeader>
+            <div className="flex-1 overflow-hidden">
+              <ChatContent />
+            </div>
+          </DrawerContent>
+        </Drawer>
+      ) : (
+        // Desktop: Popover
+        <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+          <PopoverTrigger asChild>
+            <FloatingChatButton />
+          </PopoverTrigger>
+          <PopoverContent 
+            className="w-96 h-[500px] p-0 bg-background border-border shadow-glow mr-4 mb-4"
+            side="top"
+            align="end"
           >
-            <X className="w-4 h-4" />
-          </Button>
-        </div>
-
-        {/* Chat Interface */}
-        <div className="h-[calc(100vh-4rem)]">
-          <ChatInterface
-            onFarmsHighlight={handleFarmsHighlight}
-            onSearchQuery={handleSearchQuery}
-            selectedFarm={selectedFarm}
-          />
-        </div>
-      </div>
-
-      {/* Backdrop */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 transition-opacity duration-300"
-          onClick={handleClose}
-        />
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-border bg-gradient-primary text-primary-foreground rounded-t-lg">
+              <h2 className="font-semibold">AI Farm Assistant</h2>
+              <Button
+                onClick={handleClose}
+                variant="ghost"
+                size="sm"
+                className="text-primary-foreground hover:bg-white/20 w-8 h-8 p-0"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+            
+            {/* Chat Content */}
+            <div className="h-[calc(100%-4rem)]">
+              <ChatContent />
+            </div>
+          </PopoverContent>
+        </Popover>
       )}
     </>
   );
