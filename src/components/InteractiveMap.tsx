@@ -97,6 +97,23 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       // Store marker reference for cleanup
       markers.current.push(marker);
 
+      // Add hover tooltip
+      const tooltip = document.createElement('div');
+      tooltip.className = 'absolute -top-12 left-1/2 transform -translate-x-1/2 bg-black/90 text-white px-3 py-1 rounded-md text-sm whitespace-nowrap opacity-0 pointer-events-none transition-opacity duration-200 z-50';
+      tooltip.innerHTML = `${farm.name} • ⭐ ${farm.rating}`;
+      markerElement.appendChild(tooltip);
+
+      // Add hover listeners
+      markerElement.addEventListener('mouseenter', () => {
+        tooltip.classList.remove('opacity-0');
+        tooltip.classList.add('opacity-100');
+      });
+
+      markerElement.addEventListener('mouseleave', () => {
+        tooltip.classList.remove('opacity-100');
+        tooltip.classList.add('opacity-0');
+      });
+
       // Add click handler
       markerElement.addEventListener('click', () => {
         handleFarmSelect(farm);
@@ -122,7 +139,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       
       {/* Search Bar */}
       <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
-        <div className="bg-card/95 backdrop-blur-sm border-2 border-green-600 rounded-full px-4 py-1 shadow-soft min-w-[400px]">
+        <div className="bg-card/95 backdrop-blur-sm border-2 border-green-600 rounded-full px-8 py-3 shadow-soft min-w-[400px]">
           <div className="flex items-center gap-3">
             <Search className="w-5 h-5 text-green-600" />
             <Input
