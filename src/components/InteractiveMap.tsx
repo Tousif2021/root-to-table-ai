@@ -6,7 +6,27 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { MapPin, Leaf, Star, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { Farm } from '@/types/farm';
+
+export interface Farm {
+  id: string;
+  name: string;
+  location: {
+    lat: number;
+    lng: number;
+  };
+  distance: string;
+  rating: number;
+  produce: Array<{
+    type: string;
+    price: number;
+    unit: string;
+    available: boolean;
+    organic: boolean;
+  }>;
+  ecoScore: number;
+  pickupTimes: string[];
+  deliveryAvailable: boolean;
+}
 
 interface InteractiveMapProps {
   farms: Farm[];
@@ -75,14 +95,13 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       const markerElement = document.createElement('div');
       markerElement.className = `w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ${
         isHighlighted 
-          ? 'bg-green-500 shadow-glow scale-110' 
-          : 'bg-green-600 hover:bg-green-500'
+          ? 'bg-primary shadow-glow scale-110' 
+          : 'bg-secondary hover:bg-accent'
       }`;
       markerElement.innerHTML = `<svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>`;
-      markerElement.title = `${farm.name} - Rating: ${farm.rating}⭐`;
 
       const marker = new mapboxgl.Marker(markerElement)
-        .setLngLat(farm.coordinates)
+        .setLngLat([farm.location.lng, farm.location.lat])
         .addTo(map.current);
 
       // Add click handler
@@ -107,11 +126,11 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       
       {/* Search Bar */}
       <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
-        <div className="bg-card/95 backdrop-blur-sm border-2 border-black rounded-full px-8 py-4 shadow-soft min-w-[400px]">
+        <div className="bg-card/95 backdrop-blur-sm border border-border rounded-full px-8 py-4 shadow-soft min-w-[400px]">
           <div className="flex items-center gap-3">
             <Search className="w-5 h-5 text-muted-foreground" />
             <Input
-              type="text-lg"
+              type="text"
               placeholder="Search for produce (e.g. strawberries, carrots...)"
               value={searchQuery}
               onChange={handleSearchChange}
