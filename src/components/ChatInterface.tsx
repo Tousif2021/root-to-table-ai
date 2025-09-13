@@ -105,42 +105,58 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   };
 
   return (
-    <div className="w-full min-h-screen bg-white">
-      {/* Centered Search Bar - Always visible */}
-      <div className="w-full max-w-2xl mx-auto pt-20">
-        <div className="rounded-full border-2 border-green-500 hover:border-green-600 transition-all duration-300 focus-within:border-green-600 focus-within:shadow-lg">
-          <div className="flex items-center gap-3 px-6 py-4">
-            <div className="text-green-600 flex-shrink-0">
-              <Search className="w-5 h-5" />
+    <div className="w-full flex flex-col items-center pt-20 px-4">
+      {/* AI-Enhanced Search Bar - Always visible */}
+      <div className="w-full max-w-2xl mb-8">
+        <div className="relative">
+          {/* Subtle Glow Effect */}
+          <div className="absolute -inset-1 bg-gradient-to-r from-green-400/30 via-emerald-400/30 to-green-500/30 rounded-full opacity-75 blur animate-pulse"></div>
+          
+          {/* Main Search Bar with Glass Effect */}
+          <div className="relative bg-white/95 backdrop-blur-sm rounded-full border-2 border-transparent shadow-soft hover:shadow-glow focus-within:shadow-glow transition-all duration-500 hover:scale-[1.02] focus-within:scale-[1.02]">
+            {/* Gradient Border */}
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-400 via-emerald-400 to-green-500 p-[2px]">
+              <div className="bg-white/95 backdrop-blur-sm rounded-full h-full w-full"></div>
             </div>
-            <Input
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="What fresh produce are you looking for today?"
-              className="flex-1 border-0 bg-transparent text-foreground placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0 text-lg px-0"
-              disabled={isProcessing}
-            />
-            <Button
-              onClick={handleSend}
-              disabled={!inputValue.trim() || isProcessing}
-              size="icon"
-              className="rounded-full bg-green-600 hover:bg-green-700 text-white shadow-lg flex-shrink-0 disabled:opacity-50 transition-all duration-300"
-            >
-              {isProcessing ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                <ArrowUp className="w-5 h-5" />
-              )}
-            </Button>
+            
+            <div className="relative flex items-center gap-3 px-6 py-4">
+              <div className={cn(
+                "text-gray-400 flex-shrink-0 transition-all duration-300",
+                isProcessing && "text-green-500 animate-spin"
+              )}>
+                <Search className="w-5 h-5" />
+              </div>
+              
+              <Input
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="What fresh produce are you looking for today?"
+                className="flex-1 border-0 bg-transparent text-foreground placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0 text-lg px-0 text-elegant"
+                disabled={isProcessing}
+              />
+              
+              <Button
+                onClick={handleSend}
+                disabled={!inputValue.trim() || isProcessing}
+                size="icon"
+                className="rounded-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 disabled:from-gray-300 disabled:to-gray-300 text-white shadow-medium hover:shadow-glow flex-shrink-0 transition-all duration-300 hover:scale-110 disabled:scale-100"
+              >
+                {isProcessing ? (
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                ) : (
+                  <ArrowUp className="w-4 h-4" />
+                )}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Animated Response Container */}
+      {/* Floating Response Container */}
       {hasAskedQuestion && (
-        <div className="w-full max-w-4xl mx-auto mt-8 animate-fade-in">
-          <div className="bg-gradient-to-br from-white via-green-50 to-emerald-50 rounded-3xl p-8 shadow-lg border border-green-200/50">
+        <div className="w-full max-w-4xl animate-fade-in animate-scale-in">
+          <div className="bg-gradient-to-br from-white/90 via-green-50/90 to-emerald-50/90 backdrop-blur-sm rounded-3xl p-8 shadow-glow border border-green-200/30 transition-all duration-500">
             
             {/* Chat Messages */}
             <div className="space-y-4 mb-6">
@@ -154,12 +170,12 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <div className={cn(
-                    "max-w-[80%] rounded-2xl px-4 py-3",
+                    "max-w-[80%] rounded-2xl px-4 py-3 transition-all duration-300",
                     message.type === 'user' 
-                      ? "bg-green-100 text-green-900 rounded-br-md" 
-                      : "bg-white shadow-sm border border-green-200/50 rounded-bl-md"
+                      ? "bg-green-100/90 backdrop-blur-sm text-green-900 rounded-br-md shadow-soft" 
+                      : "bg-white/95 backdrop-blur-sm shadow-medium border border-green-200/50 rounded-bl-md hover:shadow-glow"
                   )}>
-                    <p className="text-sm leading-relaxed whitespace-pre-line">
+                    <p className="text-sm leading-relaxed whitespace-pre-line text-elegant">
                       {message.content}
                     </p>
                   </div>
