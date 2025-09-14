@@ -6,6 +6,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext
 import FarmCard from '@/components/FarmCard';
 import InteractiveMap from '@/components/InteractiveMap';
 import ChatInterface from '@/components/ChatInterface';
+import HarvestForecast from '@/components/HarvestForecast';
 import { Sprout, MapPin, Leaf, Users, Bot } from 'lucide-react';
 import heroImage from '@/assets/hero-produce-crate.jpg';
 import processSteps from '@/assets/process-steps.png';
@@ -104,6 +105,9 @@ const Index = () => {
           </Carousel>
         </div>
       </section>
+
+      {/* Harvest Forecast Section */}
+      <HarvestForecast />
     </div>;
 };
 export default Index;
