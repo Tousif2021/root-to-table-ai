@@ -1,5 +1,5 @@
 import strawberriesImage from '@/assets/produce-strawberries-bag.jpg';
-import tomatoesImage from '@/assets/produce-tomatoes.jpg';
+import tomatoesImage from '@/assets/produce-tomatoes-basket.jpg';
 import carrotsImage from '@/assets/produce-carrots-fresh.jpg';
 import cornImage from '@/assets/produce-corn-hanging.jpg';
 import spinachImage from '@/assets/produce-spinach-fresh.jpg';
