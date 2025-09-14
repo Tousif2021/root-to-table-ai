@@ -13,6 +13,7 @@ export interface HarvestForecastItem {
   interestCount: number;
   seasonalTag: string;
   description: string;
+  farmName: string;
 }
 
 export const harvestForecastData: HarvestForecastItem[] = [
@@ -23,7 +24,8 @@ export const harvestForecastData: HarvestForecastItem[] = [
     imageUrl: strawberriesImage,
     interestCount: 132,
     seasonalTag: 'Peak Season',
-    description: 'Sweet, juicy strawberries perfect for summer treats'
+    description: 'Sweet, juicy strawberries perfect for summer treats',
+    farmName: 'Berry Fields Farm'
   },
   {
     id: 'tomatoes-2025',
@@ -32,7 +34,8 @@ export const harvestForecastData: HarvestForecastItem[] = [
     imageUrl: tomatoesImage,
     interestCount: 89,
     seasonalTag: 'Premium',
-    description: 'Vine-ripened heirloom varieties with rich, complex flavors'
+    description: 'Vine-ripened heirloom varieties with rich, complex flavors',
+    farmName: 'Tomato Garden Farm'
   },
   {
     id: 'carrots-2025',
@@ -41,7 +44,8 @@ export const harvestForecastData: HarvestForecastItem[] = [
     imageUrl: carrotsImage,
     interestCount: 156,
     seasonalTag: 'High Demand',
-    description: 'Colorful, sweet carrots in purple, orange, and yellow'
+    description: 'Colorful, sweet carrots in purple, orange, and yellow',
+    farmName: 'Anders\' Organic Farm'
   },
   {
     id: 'corn-2025',
@@ -50,7 +54,8 @@ export const harvestForecastData: HarvestForecastItem[] = [
     imageUrl: cornImage,
     interestCount: 203,
     seasonalTag: 'Popular',
-    description: 'Farm-fresh sweet corn, picked at peak sweetness'
+    description: 'Farm-fresh sweet corn, picked at peak sweetness',
+    farmName: 'Harvest Market Farm'
   },
   {
     id: 'spinach-2025',
@@ -59,7 +64,8 @@ export const harvestForecastData: HarvestForecastItem[] = [
     imageUrl: spinachImage,
     interestCount: 94,
     seasonalTag: 'Nutritious',
-    description: 'Tender, nutrient-rich baby spinach leaves'
+    description: 'Tender, nutrient-rich baby spinach leaves',
+    farmName: 'Lettuce Love Farm'
   },
   {
     id: 'peppers-2025',
@@ -68,7 +74,8 @@ export const harvestForecastData: HarvestForecastItem[] = [
     imageUrl: peppersImage,
     interestCount: 67,
     seasonalTag: 'Colorful',
-    description: 'Crisp, sweet bell peppers in vibrant colors'
+    description: 'Crisp, sweet bell peppers in vibrant colors',
+    farmName: 'Lena\'s Heritage Farm'
   }
 ];
 

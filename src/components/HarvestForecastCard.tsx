@@ -26,7 +26,7 @@ const HarvestForecastCard: React.FC<HarvestForecastCardProps> = ({
       
       toast({
         title: "Interest Recorded!",
-        description: `You've shown interest in ${item.name}. We'll let farmers know!`,
+        description: `Interest sent to ${item.farmName} for ${item.name}!`,
         duration: 3000,
       });
 
@@ -58,6 +58,10 @@ const HarvestForecastCard: React.FC<HarvestForecastCardProps> = ({
           
           <p className="text-sm text-muted-foreground font-medium">
             {item.season}
+          </p>
+          
+          <p className="text-sm text-primary font-medium">
+            Grown by {item.farmName}
           </p>
           
           <p className="text-sm text-muted-foreground leading-relaxed">
