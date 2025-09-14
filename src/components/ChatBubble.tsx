@@ -16,7 +16,7 @@ export const ChatBubble = ({ message, isUser, timestamp }: ChatBubbleProps) => {
     <div className={`flex items-start gap-3 mb-4 animate-fade-in ${isUser ? 'flex-row-reverse' : ''}`}>
       {/* Avatar */}
       {!isUser && (
-        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-sm flex-shrink-0">
+        <div className="w-8 h-8 rounded-full bg-gradient-green-avatar flex items-center justify-center text-sm flex-shrink-0 shadow-soft">
           🌱
         </div>
       )}
@@ -34,8 +34,8 @@ export const ChatBubble = ({ message, isUser, timestamp }: ChatBubbleProps) => {
         <div
           className={`px-4 py-3 rounded-2xl ${
             isUser
-              ? 'bg-muted text-foreground rounded-br-md ml-auto'
-              : 'bg-primary/5 text-foreground rounded-bl-md border border-primary/10'
+              ? 'bg-muted text-foreground rounded-br-md ml-auto border border-primary/10'
+              : 'bg-gradient-green-farmer text-foreground rounded-bl-md border border-primary/20'
           }`}
         >
           <p className="text-sm leading-relaxed whitespace-pre-wrap">{message}</p>

@@ -47,9 +47,7 @@ const FarmerChat: React.FC<FarmerChatProps> = ({ farmerName, farmerAvatar, farmN
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages, isTyping]);
+  // Remove auto-scroll to let users control scrolling manually
 
   const generateFarmSpecificResponse = (userMessage: string) => {
     const message = userMessage.toLowerCase();
@@ -168,42 +166,39 @@ const FarmerChat: React.FC<FarmerChatProps> = ({ farmerName, farmerAvatar, farmN
   };
 
   const handleQuickQuestion = (question: string) => {
-    setMessage(question);
-    // Auto-send the quick question
+    // Send directly without setting in input field
+    const newUserMessage: Message = {
+      id: Date.now().toString(),
+      content: question,
+      isUser: true,
+      timestamp: new Date(),
+    };
+    
+    setMessages(prev => [...prev, newUserMessage]);
+    setIsTyping(true);
+    
+    // Simulate farmer response
     setTimeout(() => {
-      const newUserMessage: Message = {
-        id: Date.now().toString(),
-        content: question,
-        isUser: true,
+      const farmerResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        content: generateFarmSpecificResponse(question),
+        isUser: false,
         timestamp: new Date(),
       };
       
-      setMessages(prev => [...prev, newUserMessage]);
-      setIsTyping(true);
-      
-      // Simulate farmer response
-      setTimeout(() => {
-        const farmerResponse: Message = {
-          id: (Date.now() + 1).toString(),
-          content: generateFarmSpecificResponse(question),
-          isUser: false,
-          timestamp: new Date(),
-        };
-        
-        setMessages(prev => [...prev, farmerResponse]);
-        setIsTyping(false);
-      }, 1000 + Math.random() * 1000);
-    }, 100);
+      setMessages(prev => [...prev, farmerResponse]);
+      setIsTyping(false);
+    }, 1000 + Math.random() * 1000);
   };
 
   return (
-    <Card className="shadow-medium bg-card border-border h-[500px] flex flex-col">
+    <Card className="shadow-medium bg-gradient-green-chat border-primary/10 h-[500px] flex flex-col">
       {/* Farmer Profile Header */}
       <div className="flex-shrink-0 p-4 border-b border-border">
         <div className="flex items-center gap-3">
-          <Avatar className="h-12 w-12 ring-2 ring-primary/20">
+          <Avatar className="h-12 w-12 ring-2 ring-primary/30">
             <AvatarImage src={farmerAvatar} alt={farmerName} />
-            <AvatarFallback className="bg-primary text-primary-foreground">
+            <AvatarFallback className="bg-gradient-green-avatar text-white">
               {farmerName.charAt(0)}
             </AvatarFallback>
           </Avatar>
@@ -211,7 +206,7 @@ const FarmerChat: React.FC<FarmerChatProps> = ({ farmerName, farmerAvatar, farmN
             <h4 className="font-medium text-foreground">{farmerName}</h4>
             <p className="text-sm text-muted-foreground">Owner of {farmName}</p>
           </div>
-          <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
+          <Badge variant="secondary" className="bg-gradient-green-farmer text-primary border-primary/30">
             <div className="w-2 h-2 bg-primary rounded-full mr-2 animate-pulse"></div>
             {isOnline ? 'Online now' : 'Replies in ~1h'}
           </Badge>
@@ -251,7 +246,7 @@ const FarmerChat: React.FC<FarmerChatProps> = ({ farmerName, farmerAvatar, farmN
                 variant="outline"
                 size="sm"
                 onClick={() => handleQuickQuestion(question)}
-                className="text-xs border-border hover:bg-primary/10 hover:border-primary/50 hover:text-primary transition-smooth rounded-full"
+                className="text-xs border-primary/20 hover:bg-gradient-green-farmer hover:border-primary/50 hover:text-primary transition-smooth rounded-full"
               >
                 {question}
               </Button>
@@ -262,7 +257,7 @@ const FarmerChat: React.FC<FarmerChatProps> = ({ farmerName, farmerAvatar, farmN
 
       {/* Chat Input */}
       <div className="flex-shrink-0 p-4 border-t border-border">
-        <div className="flex items-center gap-3 bg-muted/30 border border-border rounded-full px-4 py-2 focus-within:border-primary focus-within:bg-background transition-all duration-200">
+        <div className="flex items-center gap-3 bg-muted/30 border border-primary/20 rounded-full px-4 py-2 focus-within:border-primary focus-within:bg-gradient-green-farmer transition-all duration-200">
           <Input
             placeholder="Ask about produce, pickup times, or anything else..."
             value={message}
@@ -275,7 +270,7 @@ const FarmerChat: React.FC<FarmerChatProps> = ({ farmerName, farmerAvatar, farmN
             onClick={handleSend}
             disabled={!message.trim() || isTyping}
             size="sm"
-            className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full h-8 w-8 p-0"
+            className="bg-gradient-green-avatar hover:bg-primary/90 text-white rounded-full h-8 w-8 p-0 shadow-soft"
           >
             <Send className="w-4 h-4" />
           </Button>
