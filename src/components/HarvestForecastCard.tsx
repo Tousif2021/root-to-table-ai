@@ -60,7 +60,7 @@ const HarvestForecastCard: React.FC<HarvestForecastCardProps> = ({
             {item.season}
           </p>
           
-          <p className="text-sm text-primary font-medium">
+          <p className="text-sm text-primary font-semibold">
             Grown by {item.farmName}
           </p>
           
