@@ -28,16 +28,6 @@ export const harvestForecastData: HarvestForecastItem[] = [
     farmName: 'Berry Fields Farm'
   },
   {
-    id: 'tomatoes-2025',
-    name: 'Heirloom Tomatoes',
-    season: 'Summer 2025',
-    imageUrl: tomatoesImage,
-    interestCount: 89,
-    seasonalTag: 'Premium',
-    description: 'Vine-ripened heirloom varieties with rich, complex flavors',
-    farmName: 'Tomato Garden Farm'
-  },
-  {
     id: 'carrots-2025',
     name: 'Rainbow Carrots',
     season: 'Fall 2025',
@@ -46,6 +36,16 @@ export const harvestForecastData: HarvestForecastItem[] = [
     seasonalTag: 'High Demand',
     description: 'Colorful, sweet carrots in purple, orange, and yellow',
     farmName: 'Anders\' Organic Farm'
+  },
+  {
+    id: 'tomatoes-2025',
+    name: 'Heirloom Tomatoes',
+    season: 'Summer 2025',
+    imageUrl: tomatoesImage,
+    interestCount: 89,
+    seasonalTag: 'Premium',
+    description: 'Vine-ripened heirloom varieties with rich, complex flavors',
+    farmName: 'Tomato Garden Farm'
   },
   {
     id: 'corn-2025',
