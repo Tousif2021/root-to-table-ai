@@ -15,6 +15,7 @@ import FarmerChat from '@/components/FarmerChat';
 import SustainabilityMetrics from '@/components/SustainabilityMetrics';
 import ProductCatalog from '@/components/ProductCatalog';
 import MiniCart from '@/components/MiniCart';
+import OrderConfirmation from '@/components/OrderConfirmation';
 import { ArrowLeft, MapPin, Star, Leaf, CheckCircle } from 'lucide-react';
 import { mockFarms } from '@/data/farmData';
 import { toast } from 'sonner';
@@ -32,6 +33,8 @@ interface CartItem {
 const FarmOrder = () => {
   const { farmName } = useParams<{ farmName: string }>();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [showOrderConfirmation, setShowOrderConfirmation] = useState(false);
+  const [selectedDeliveryOption, setSelectedDeliveryOption] = useState<any>(null);
 
   // Find the actual farm data based on URL parameter
   const farm = mockFarms.find(f => 
@@ -97,9 +100,20 @@ const FarmOrder = () => {
     toast.success('Item removed from cart');
   };
 
-  const handleCheckout = () => {
-    toast.success('Redirecting to checkout...');
-    // Here you would redirect to a checkout page or payment processor
+  const handleCheckout = (deliveryOption?: any) => {
+    if (cartItems.length === 0) {
+      toast.error('Your cart is empty');
+      return;
+    }
+    
+    setSelectedDeliveryOption(deliveryOption);
+    setShowOrderConfirmation(true);
+  };
+
+  const handleOrderConfirmationClose = () => {
+    setShowOrderConfirmation(false);
+    setCartItems([]); // Clear cart after order confirmation
+    setSelectedDeliveryOption(null);
   };
 
   return (
@@ -233,6 +247,16 @@ const FarmOrder = () => {
           </div>
         </div>
       </section>
+
+      {/* Order Confirmation Modal */}
+      <OrderConfirmation
+        isOpen={showOrderConfirmation}
+        onClose={handleOrderConfirmationClose}
+        cartItems={cartItems}
+        farmName={farm.name}
+        farmDistance={parseInt(farm.distance.replace('km away', ''))}
+        deliveryOption={selectedDeliveryOption}
+      />
     </main>
   );
 };

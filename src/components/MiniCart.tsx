@@ -28,7 +28,7 @@ interface MiniCartProps {
   deliveryOptions: DeliveryOption[];
   onUpdateQuantity: (productId: string, quantity: number) => void;
   onRemoveFromCart: (productId: string) => void;
-  onCheckout: () => void;
+  onCheckout: (deliveryOption?: DeliveryOption) => void;
 }
 
 const MiniCart: React.FC<MiniCartProps> = ({
@@ -203,7 +203,7 @@ const MiniCart: React.FC<MiniCartProps> = ({
 
         {/* Checkout Button */}
         <Button
-          onClick={onCheckout}
+          onClick={() => onCheckout(selectedDelivery || undefined)}
           disabled={!selectedDelivery}
           className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
           size="lg"
