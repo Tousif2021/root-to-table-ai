@@ -35,12 +35,12 @@ const ProcessSteps: React.FC = () => {
             {steps.map((step) => {
               const IconComponent = step.icon;
               return (
-                <div key={step.number} className="flex items-center gap-4 max-w-xs">
-                  <div className="flex items-center justify-center w-12 h-12 bg-primary text-primary-foreground rounded-full text-lg font-bold shrink-0">
+                <div key={step.number} className="flex flex-col items-center text-center max-w-xs space-y-4">
+                  <div className="flex items-center justify-center w-20 h-20 bg-primary text-primary-foreground rounded-full text-3xl font-bold">
                     {step.number}
                   </div>
-                  <div className="text-left">
-                    <div className="flex items-center gap-2 mb-1">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-center gap-2">
                       <IconComponent className="w-5 h-5 text-primary" />
                       <p className="font-bold text-foreground text-lg">{step.title}</p>
                     </div>
