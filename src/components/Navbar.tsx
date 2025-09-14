@@ -29,12 +29,12 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-6">
-            <div className="flex items-center space-x-1 bg-muted/50 rounded-full p-1 backdrop-blur-sm border border-border/30">
+          <div className="hidden md:flex items-center gap-8">
+            <div className="flex items-center space-x-2 bg-muted/50 rounded-full p-2 backdrop-blur-sm border border-border/30">
               {navItems.map((item) => (
                 <Link key={item.name} to={item.path} className="relative">
                   <motion.div
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors relative z-10 ${
+                    className={`px-6 py-3 rounded-full text-base font-medium transition-colors relative z-10 ${
                       isActive(item.path)
                         ? 'text-primary-foreground'
                         : 'text-muted-foreground hover:text-foreground'
@@ -66,19 +66,19 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Navigation */}
-          <div className="md:hidden flex items-center gap-2">
+          <div className="md:hidden flex items-center gap-4">
             <CartBadge />
             <Button
               variant="ghost"
-              size="sm"
+              size="default"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="relative z-50"
+              className="relative z-50 p-3"
             >
               <motion.div
                 animate={{ rotate: isMobileMenuOpen ? 90 : 0 }}
                 transition={{ duration: 0.2 }}
               >
-                {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
               </motion.div>
             </Button>
           </div>
@@ -106,7 +106,7 @@ const Navbar = () => {
                 className="block"
               >
                 <motion.div
-                  className={`flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors ${
+                  className={`flex items-center space-x-4 px-4 py-4 rounded-lg text-base font-medium transition-colors ${
                     isActive(item.path)
                       ? 'bg-primary text-primary-foreground shadow-lg'
                       : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
@@ -114,7 +114,7 @@ const Navbar = () => {
                   whileHover={{ scale: 1.02, x: 4 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <Icon size={18} />
+                  <Icon size={22} />
                   <span>{item.name}</span>
                 </motion.div>
               </Link>
