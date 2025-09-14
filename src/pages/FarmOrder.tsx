@@ -190,7 +190,8 @@ const FarmOrder = () => {
             <FarmerChat 
               farmerName={farm.name.split(' ')[0]} 
               farmName={farm.name}
-              farmerAvatar="/placeholder.svg" 
+              farmerAvatar="/placeholder.svg"
+              farm={farm}
             />
           </div>
 

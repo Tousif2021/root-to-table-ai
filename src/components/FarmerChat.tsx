@@ -19,9 +19,10 @@ interface FarmerChatProps {
   farmerName: string;
   farmerAvatar?: string;
   farmName: string;
+  farm: any; // Farm object with produce, pickup times, etc.
 }
 
-const FarmerChat: React.FC<FarmerChatProps> = ({ farmerName, farmerAvatar, farmName }) => {
+const FarmerChat: React.FC<FarmerChatProps> = ({ farmerName, farmerAvatar, farmName, farm }) => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -50,14 +51,88 @@ const FarmerChat: React.FC<FarmerChatProps> = ({ farmerName, farmerAvatar, farmN
     scrollToBottom();
   }, [messages, isTyping]);
 
-  const simulateFarmerResponse = (userMessage: string) => {
+  const generateFarmSpecificResponse = (userMessage: string) => {
+    const message = userMessage.toLowerCase();
+    
+    // Available products / What do you have
+    if (message.includes('available') || message.includes('products') || message.includes('what do you have') || message.includes('what\'s available')) {
+      const availableProducts = farm.produce.filter((item: any) => item.available);
+      const unavailableProducts = farm.produce.filter((item: any) => !item.available);
+      
+      let response = "Today we have: ";
+      availableProducts.forEach((item: any, index: number) => {
+        response += `${item.type} (${item.price} SEK/${item.unit})`;
+        if (item.organic) response += " - organic";
+        if (index < availableProducts.length - 1) response += ", ";
+      });
+      
+      if (unavailableProducts.length > 0) {
+        response += ". Unfortunately, ";
+        unavailableProducts.forEach((item: any, index: number) => {
+          response += item.type;
+          if (index < unavailableProducts.length - 1) response += ", ";
+        });
+        response += " are currently out of season.";
+      }
+      
+      response += " 🌱";
+      return response;
+    }
+    
+    // Pickup times / Hours
+    if (message.includes('pickup') || message.includes('hours') || message.includes('when') || message.includes('time')) {
+      if (farm.pickupTimes && farm.pickupTimes.length > 0) {
+        return `You can pick up during these times: ${farm.pickupTimes.join(', ')}. We're flexible within those hours! 🕐`;
+      }
+      return "You can pick up anytime between 8 AM and 6 PM. We're open all day! 🕐";
+    }
+    
+    // Specialties
+    if (message.includes('specialty') || message.includes('specialties') || message.includes('special')) {
+      if (farm.specialties && farm.specialties.length > 0) {
+        return `We specialize in ${farm.specialties.join(', ')}. These are what make our farm unique! 🌟`;
+      }
+      return "We focus on growing the highest quality, freshest produce using sustainable methods! 🌟";
+    }
+    
+    // Organic questions
+    if (message.includes('organic')) {
+      const organicProducts = farm.produce.filter((item: any) => item.organic && item.available);
+      if (organicProducts.length > 0) {
+        const organicList = organicProducts.map((item: any) => item.type).join(', ');
+        return `Our organic options today are: ${organicList}. All grown without pesticides! 🌿`;
+      }
+      return "We grow organically whenever possible! Check our available products for today's organic options. 🌿";
+    }
+    
+    // Prices
+    if (message.includes('price') || message.includes('cost') || message.includes('expensive')) {
+      return "All our prices are listed with each product. We offer great value for farm-fresh, quality produce! 💰";
+    }
+    
+    // Delivery
+    if (message.includes('delivery') || message.includes('deliver')) {
+      if (farm.deliveryAvailable) {
+        return "Yes, we offer delivery! You can choose delivery at checkout for your convenience. 🚚";
+      }
+      return "We currently only offer pickup, but it's a great chance to see the farm! 🚜";
+    }
+    
+    // Fresh today
+    if (message.includes('fresh') || message.includes('today')) {
+      const availableProducts = farm.produce.filter((item: any) => item.available);
+      if (availableProducts.length > 0) {
+        return `Everything available today was harvested fresh! Our ${availableProducts[0].type.toLowerCase()} are especially good right now. 🌱`;
+      }
+      return "All our produce is harvested fresh daily! 🌱";
+    }
+    
+    // Fallback responses
     const responses = [
-      "Great question! Let me check on that for you.",
-      "Absolutely! We have fresh organic produce available today.",
-      "You can pick up anytime between 8 AM and 6 PM. We're open all day!",
-      "Today's specials include fresh tomatoes and leafy greens. Everything was harvested this morning!",
-      "Our organic carrots are perfect today - sweet and crisp!",
-      "We have a 10% discount on bulk orders over $50. Interested?",
+      "Great question! Let me help you with that.",
+      "Absolutely! We love talking about our farm and produce.",
+      "Thanks for asking! We're always happy to share more about what we grow.",
+      "Perfect timing! We're here to help with any questions about our farm.",
     ];
     
     return responses[Math.floor(Math.random() * responses.length)];
@@ -81,7 +156,7 @@ const FarmerChat: React.FC<FarmerChatProps> = ({ farmerName, farmerAvatar, farmN
       setTimeout(() => {
         const farmerResponse: Message = {
           id: (Date.now() + 1).toString(),
-          content: simulateFarmerResponse(message),
+          content: generateFarmSpecificResponse(message),
           isUser: false,
           timestamp: new Date(),
         };
@@ -110,7 +185,7 @@ const FarmerChat: React.FC<FarmerChatProps> = ({ farmerName, farmerAvatar, farmN
       setTimeout(() => {
         const farmerResponse: Message = {
           id: (Date.now() + 1).toString(),
-          content: simulateFarmerResponse(question),
+          content: generateFarmSpecificResponse(question),
           isUser: false,
           timestamp: new Date(),
         };
