@@ -1,5 +1,20 @@
 import { Farm } from '@/types/farm';
 
+// Local farm images
+import farmVegetablesMarket from '@/assets/farm-vegetables-market.jpg';
+import farmWorkersField from '@/assets/farm-workers-field.jpg';
+import farmSunsetPath from '@/assets/farm-sunset-path.jpg';
+import farmHarvestVegetables from '@/assets/farm-harvest-vegetables.jpg';
+import farmVineyardRows from '@/assets/farm-vineyard-rows.jpg';
+import farmLeafyGreens from '@/assets/farm-leafy-greens.jpg';
+import farmLettuceHands from '@/assets/farm-lettuce-hands.jpg';
+import farmSeedlings from '@/assets/farm-seedlings.jpg';
+import farmTomatoes from '@/assets/farm-tomatoes.jpg';
+import farmChard from '@/assets/farm-chard.jpg';
+import farmRows from '@/assets/farm-rows.jpg';
+import farmOranges from '@/assets/farm-oranges.jpg';
+import farmWatering from '@/assets/farm-watering.jpg';
+
 export const mockFarms: Farm[] = [
   {
     id: 'resta-gard',
@@ -19,7 +34,7 @@ export const mockFarms: Farm[] = [
     ecoScore: 8,
     pickupTimes: ["8:00-19:00"],
     deliveryAvailable: true,
-    imageUrl: "https://source.unsplash.com/800x600/?farm,vegetables,market",
+    imageUrl: farmVegetablesMarket,
     description: "Traditional Swedish farm specializing in seasonal vegetables, fresh herbs, and free-range poultry. Known for their organic growing practices and fresh daily harvests.",
     specialties: ["Seasonal Vegetables", "Fresh Herbs", "Free-range Eggs", "Organic Certified"]
   },
@@ -37,7 +52,7 @@ export const mockFarms: Farm[] = [
     ecoScore: 9,
     pickupTimes: ["7:00-18:00"],
     deliveryAvailable: true,
-    imageUrl: "https://source.unsplash.com/800x600/?farm,chickens,pasture",
+    imageUrl: farmWorkersField,
     description: "Passionate about animal welfare, our hens roam freely on natural pastures. Certified organic with the highest standards for both animal care and environmental sustainability.",
     specialties: ["Organic Eggs", "Pasture-raised Poultry", "Animal Welfare Certified"]
   },
@@ -54,7 +69,7 @@ export const mockFarms: Farm[] = [
     ecoScore: 8,
     pickupTimes: ["9:00-17:00"],
     deliveryAvailable: false,
-    imageUrl: "https://source.unsplash.com/800x600/?farm,poultry,countryside",
+    imageUrl: farmSunsetPath,
     description: "Family-run poultry farm with focus on pasture-raised birds and natural feeding practices.",
     specialties: ["Pasture-raised", "Natural Feeding", "Family Farm"]
   },
@@ -73,7 +88,7 @@ export const mockFarms: Farm[] = [
     ecoScore: 7,
     pickupTimes: ["8:00-18:00"],
     deliveryAvailable: true,
-    imageUrl: "https://source.unsplash.com/800x600/?farm,asparagus,spring",
+    imageUrl: farmHarvestVegetables,
     description: "Seasonal farm specializing in fresh spring vegetables. Follow natural growing cycles for peak freshness and flavor.",
     specialties: ["Spring Vegetables", "Seasonal Produce", "Natural Growing"]
   },
@@ -92,7 +107,7 @@ export const mockFarms: Farm[] = [
     ecoScore: 8,
     pickupTimes: ["7:00-19:00"],
     deliveryAvailable: true,
-    imageUrl: "https://source.unsplash.com/800x600/?orchard,apples,fruit",
+    imageUrl: farmVineyardRows,
     description: "Local orchard specializing in seasonal fruits with traditional growing methods.",
     specialties: ["Seasonal Fruits", "Traditional Methods", "Local Varieties"]
   },
@@ -110,7 +125,7 @@ export const mockFarms: Farm[] = [
     ecoScore: 9,
     pickupTimes: ["6:00-20:00"],
     deliveryAvailable: false,
-    imageUrl: "https://source.unsplash.com/800x600/?farm,berries,strawberry",
+    imageUrl: farmHarvestVegetables,
     description: "Specialty berry farm with focus on organic growing and sustainable practices.",
     specialties: ["Organic Berries", "Sustainable Growing", "Specialty Varieties"]
   },
@@ -129,7 +144,7 @@ export const mockFarms: Farm[] = [
     ecoScore: 9.2,
     pickupTimes: ['Today 14:00-18:00', 'Tomorrow 09:00-17:00'],
     deliveryAvailable: true,
-    imageUrl: 'https://source.unsplash.com/800x600/?farm,organic,greens',
+    imageUrl: farmLeafyGreens,
     description: 'Family-owned organic farm specializing in seasonal produce with sustainable farming practices for over 30 years.',
     specialties: ['Organic Certified', 'Pesticide-Free', 'Local Family Farm'],
   },
@@ -148,7 +163,7 @@ export const mockFarms: Farm[] = [
     ecoScore: 8.8,
     pickupTimes: ['Tomorrow 10:00-16:00', 'Weekend 08:00-15:00'],
     deliveryAvailable: false,
-    imageUrl: 'https://source.unsplash.com/800x600/?farm,heritage,harvest',
+    imageUrl: farmWorkersField,
     description: 'Heritage farm preserving traditional farming methods while maintaining high quality organic standards.',
     specialties: ['Heritage Varieties', 'Traditional Methods', 'Organic Certified'],
   },
@@ -167,7 +182,7 @@ export const mockFarms: Farm[] = [
     ecoScore: 7.5,
     pickupTimes: ['Today 12:00-19:00'],
     deliveryAvailable: true,
-    imageUrl: 'https://source.unsplash.com/800x600/?farm,cooperative,lettuce',
+    imageUrl: farmLettuceHands,
     description: 'Community-supported cooperative focused on affordable fresh produce with sustainable growing practices.',
     specialties: ['Community Supported', 'Affordable Prices', 'Local Cooperative'],
   },
@@ -186,7 +201,7 @@ export const mockFarms: Farm[] = [
     ecoScore: 8.5,
     pickupTimes: ['Weekend 09:00-17:00'],
     deliveryAvailable: false,
-    imageUrl: 'https://source.unsplash.com/800x600/?orchard,fruit,apples',
+    imageUrl: farmVineyardRows,
     description: 'Premium fruit orchard specializing in organic berries and tree fruits with sustainable irrigation systems.',
     specialties: ['Premium Fruits', 'Organic Berries', 'Sustainable Irrigation'],
   },
@@ -205,7 +220,7 @@ export const mockFarms: Farm[] = [
     ecoScore: 9.0,
     pickupTimes: ['Today 15:00-20:00', 'Tomorrow 10:00-18:00'],
     deliveryAvailable: true,
-    imageUrl: 'https://source.unsplash.com/800x600/?urban,farm,vertical',
+    imageUrl: farmSeedlings,
     description: 'Innovative urban farm using vertical growing techniques to provide fresh herbs and microgreens year-round.',
     specialties: ['Urban Farming', 'Vertical Growing', 'Year-Round Production'],
   },
@@ -224,7 +239,7 @@ export const mockFarms: Farm[] = [
     ecoScore: 8.9,
     pickupTimes: ['Today 16:00-19:00', 'Tomorrow 11:00-17:00'],
     deliveryAvailable: true,
-    imageUrl: 'https://source.unsplash.com/800x600/?greenhouse,tomatoes,heirloom',
+    imageUrl: farmTomatoes,
     description: 'Specialty tomato farm growing over 20 varieties of heirloom and cherry tomatoes using greenhouse techniques.',
     specialties: ['Heirloom Tomatoes', 'Greenhouse Growing', 'Specialty Varieties'],
   },
@@ -243,7 +258,7 @@ export const mockFarms: Farm[] = [
     ecoScore: 8.3,
     pickupTimes: ['Tomorrow 08:00-14:00', 'Weekend 10:00-16:00'],
     deliveryAvailable: false,
-    imageUrl: 'https://source.unsplash.com/800x600/?farm,chard,rainbow',
+    imageUrl: farmChard,
     description: 'Cooperative farm specializing in colorful leafy greens and root vegetables with regenerative farming practices.',
     specialties: ['Colorful Vegetables', 'Regenerative Farming', 'Cooperative Model'],
   },
@@ -262,7 +277,7 @@ export const mockFarms: Farm[] = [
     ecoScore: 9.5,
     pickupTimes: ['Today 13:00-17:00', 'Tomorrow 09:00-15:00'],
     deliveryAvailable: true,
-    imageUrl: 'https://source.unsplash.com/800x600/?garden,nursery,seedlings',
+    imageUrl: farmSeedlings,
     description: 'Boutique garden nursery focusing on young plants, baby greens, and educational gardening workshops.',
     specialties: ['Baby Greens', 'Plant Nursery', 'Educational Workshops'],
   },
@@ -281,7 +296,7 @@ export const mockFarms: Farm[] = [
     ecoScore: 8.7,
     pickupTimes: ['Weekend 07:00-12:00'],
     deliveryAvailable: false,
-    imageUrl: 'https://source.unsplash.com/800x600/?seedlings,plants,nursery',
+    imageUrl: farmSeedlings,
     description: 'Specialized seedling producer offering starter plants for home gardeners and small-scale farmers.',
     specialties: ['Starter Plants', 'Home Gardening', 'Microgreen Production'],
   },
@@ -300,7 +315,7 @@ export const mockFarms: Farm[] = [
     ecoScore: 8.8,
     pickupTimes: ['Tomorrow 14:00-18:00', 'Weekend 08:00-16:00'],
     deliveryAvailable: true,
-    imageUrl: 'https://source.unsplash.com/800x600/?farm,rows,organic',
+    imageUrl: farmRows,
     description: 'Large-scale organic farm with perfectly organized crop rows and sustainable water management systems.',
     specialties: ['Large Scale Organic', 'Water Conservation', 'Crop Rotation'],
   },
@@ -319,7 +334,7 @@ export const mockFarms: Farm[] = [
     ecoScore: 8.4,
     pickupTimes: ['Weekend 10:00-15:00'],
     deliveryAvailable: false,
-    imageUrl: 'https://source.unsplash.com/800x600/?citrus,oranges,grove',
+    imageUrl: farmOranges,
     description: 'Traditional citrus grove growing premium organic citrus fruits with natural pest control methods.',
     specialties: ['Citrus Fruits', 'Natural Pest Control', 'Premium Quality'],
   },
@@ -338,7 +353,7 @@ export const mockFarms: Farm[] = [
     ecoScore: 7.8,
     pickupTimes: ['Today 11:00-17:00', 'Tomorrow 12:00-18:00'],
     deliveryAvailable: true,
-    imageUrl: 'https://source.unsplash.com/800x600/?farm,market,vegetables',
+    imageUrl: farmVegetablesMarket,
     description: 'Market-focused farm producing high-volume fresh vegetables with efficient harvesting and distribution.',
     specialties: ['Market Fresh', 'High Volume', 'Quick Distribution'],
   },
@@ -357,7 +372,7 @@ export const mockFarms: Farm[] = [
     ecoScore: 9.1,
     pickupTimes: ['Today 14:00-19:00', 'Tomorrow 08:00-14:00'],
     deliveryAvailable: true,
-    imageUrl: 'https://source.unsplash.com/800x600/?lettuce,harvest,hands',
+    imageUrl: farmLettuceHands,
     description: 'Artisanal lettuce farm specializing in premium varieties with hand-harvesting for maximum freshness.',
     specialties: ['Premium Lettuce', 'Hand Harvested', 'Artisanal Quality'],
   },
@@ -376,7 +391,7 @@ export const mockFarms: Farm[] = [
     ecoScore: 8.6,
     pickupTimes: ['Weekend 09:00-16:00'],
     deliveryAvailable: false,
-    imageUrl: 'https://source.unsplash.com/800x600/?farm,field,sustainable',
+    imageUrl: farmWatering,
     description: 'Large field operation focusing on seasonal crops and sustainable farming techniques across multiple acres.',
     specialties: ['Field Crops', 'Seasonal Produce', 'Large Scale Sustainable'],
   },
@@ -395,7 +410,7 @@ export const mockFarms: Farm[] = [
     ecoScore: 8.2,
     pickupTimes: ['Tomorrow 15:00-19:00', 'Weekend 11:00-17:00'],
     deliveryAvailable: true,
-    imageUrl: 'https://source.unsplash.com/800x600/?vineyard,grapes,rows',
+    imageUrl: farmVineyardRows,
     description: 'Traditional vineyard expanding into table grape production with biodynamic farming principles.',
     specialties: ['Grape Varieties', 'Biodynamic Farming', 'Traditional Methods'],
   },
