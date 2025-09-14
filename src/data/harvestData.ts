@@ -1,9 +1,9 @@
-import strawberriesImage from '@/assets/produce-strawberries.jpg';
+import strawberriesImage from '@/assets/produce-strawberries-bag.jpg';
 import tomatoesImage from '@/assets/produce-tomatoes.jpg';
-import carrotsImage from '@/assets/produce-carrots.jpg';
-import cornImage from '@/assets/produce-corn.jpg';
-import spinachImage from '@/assets/produce-spinach.jpg';
-import peppersImage from '@/assets/produce-peppers.jpg';
+import carrotsImage from '@/assets/produce-carrots-fresh.jpg';
+import cornImage from '@/assets/produce-corn-hanging.jpg';
+import spinachImage from '@/assets/produce-spinach-fresh.jpg';
+import peppersImage from '@/assets/produce-peppers-basket.jpg';
 
 export interface HarvestForecastItem {
   id: string;
