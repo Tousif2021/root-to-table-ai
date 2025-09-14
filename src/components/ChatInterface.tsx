@@ -29,29 +29,48 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [hasStartedChat, setHasStartedChat] = useState(false);
   const {
     generateResponse,
     isProcessing
   } = useAIAssistant();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const scrollToBottom = () => {
+  const scrollToBottom = (smooth: boolean = false) => {
     if (messagesEndRef.current) {
       const messagesContainer = messagesEndRef.current.parentElement;
       if (messagesContainer) {
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        messagesContainer.scrollTo({
+          top: messagesContainer.scrollHeight,
+          behavior: smooth ? 'smooth' : 'auto'
+        });
       }
     }
   };
   useEffect(() => {
-    scrollToBottom();
-  }, [messages, isTyping]);
+    if (hasStartedChat) {
+      scrollToBottom(true);
+    }
+  }, [messages, isTyping, hasStartedChat]);
+
+  const expandChat = () => {
+    if (!hasStartedChat) {
+      setIsExpanded(true);
+      setHasStartedChat(true);
+    }
+  };
   const handleVisitFarm = (farm: Farm) => {
     const farmUrl = farm.name.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
     navigate(`/order/${farmUrl}`);
   };
   const handleSend = async () => {
     if (!input.trim()) return;
+
+    // Expand chat on first interaction
+    expandChat();
+
     const userMessage: Message = {
       id: Date.now().toString(),
       type: 'user',
@@ -87,10 +106,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         }
 
         // Scroll to bottom after farm suggestions are added
-        setTimeout(() => scrollToBottom(), 100);
+        setTimeout(() => scrollToBottom(true), 200);
       } else {
         // Scroll to bottom for regular AI responses
-        setTimeout(() => scrollToBottom(), 50);
+        setTimeout(() => scrollToBottom(true), 100);
       }
       if (response.searchQuery && onSearchQuery) {
         onSearchQuery(response.searchQuery);
@@ -113,27 +132,111 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
       handleSend();
     }
   };
-  return <div className="h-[600px] flex flex-col bg-gradient-to-b from-white via-green-50/30 to-green-100/50 overflow-hidden">
+
+  const handleSuggestionClick = (suggestion: string) => {
+    expandChat();
+    setInput(suggestion);
+    // Auto-send the suggestion
+    setTimeout(() => {
+      const event = new KeyboardEvent('keydown', { key: 'Enter' });
+      handleSend();
+    }, 100);
+  };
+
+  const handleInputFocus = () => {
+    expandChat();
+  };
+  // Collapsed state - only search bar
+  if (!isExpanded) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <div className="relative max-w-2xl w-full mx-auto px-4">
+          <div className="relative">
+            <div className="flex items-center gap-3 bg-white border-2 border-green-200 rounded-full px-6 py-4 shadow-xl hover:shadow-2xl transition-all duration-300 animate-pulse-glow">
+              <MessageCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+              <Input 
+                type="text" 
+                placeholder="Ask me about farms, produce, or seasonal recommendations..." 
+                value={input} 
+                onChange={e => setInput(e.target.value)}
+                onFocus={handleInputFocus}
+                onKeyPress={handleKeyPress}
+                className="border-0 bg-transparent p-0 text-base placeholder:text-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 flex-1" 
+                disabled={isProcessing}
+              />
+              <Button 
+                onClick={handleSend} 
+                disabled={!input.trim() || isProcessing} 
+                size="sm" 
+                className="rounded-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-md hover:shadow-lg px-4 py-2 h-10 transition-all duration-200"
+              >
+                <Send className="w-4 h-4" />
+              </Button>
+            </div>
+            
+            {/* Quick suggestion chips below search bar */}
+            <div className="mt-4 flex flex-wrap gap-2 justify-center">
+              {predefinedSuggestions.slice(0, 4).map((suggestion, index) => (
+                <button 
+                  key={index} 
+                  onClick={() => handleSuggestionClick(suggestion)}
+                  className="px-4 py-2 text-sm bg-green-50 hover:bg-green-100 text-green-700 rounded-full border border-green-200 transition-all duration-200 hover:shadow-md"
+                >
+                  {suggestion}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Expanded state - full chat interface
+  return (
+    <div 
+      ref={chatContainerRef}
+      className="h-[600px] flex flex-col bg-gradient-to-b from-white via-green-50/30 to-green-100/50 overflow-hidden transition-all duration-300 ease-out animate-scale-in"
+    >
       {/* Messages Container */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Messages Area */}
         <div className="flex-1 overflow-y-auto">
-          {messages.length > 0 ? <div className="p-4 space-y-1">
-              {messages.map(message => <div key={message.id}>
-                  {(message.type === 'user' || message.type === 'ai') && <ChatBubble message={message.content} isUser={message.type === 'user'} timestamp={message.timestamp} />}
+          {messages.length > 0 ? (
+            <div className="p-4 space-y-1">
+              {messages.map(message => (
+                <div key={message.id}>
+                  {(message.type === 'user' || message.type === 'ai') && (
+                    <ChatBubble 
+                      message={message.content} 
+                      isUser={message.type === 'user'} 
+                      timestamp={message.timestamp} 
+                    />
+                  )}
 
-                  {message.type === 'farms' && message.suggestedFarms && <div className="mb-4 pl-11">
+                  {message.type === 'farms' && message.suggestedFarms && (
+                    <div className="mb-4 pl-11">
                       <div className="grid gap-3 max-w-md">
-                        {message.suggestedFarms.map(farm => <FarmSuggestionCard key={farm.id} farm={farm} onVisitFarm={handleVisitFarm} />)}
+                        {message.suggestedFarms.map(farm => (
+                          <FarmSuggestionCard 
+                            key={farm.id} 
+                            farm={farm} 
+                            onVisitFarm={handleVisitFarm} 
+                          />
+                        ))}
                       </div>
-                    </div>}
-                </div>)}
+                    </div>
+                  )}
+                </div>
+              ))}
               
               {/* Typing Indicator */}
               {isTyping && <TypingIndicator />}
               
               <div ref={messagesEndRef} />
-            </div> : <div className="flex items-end justify-center pb-8">
+            </div>
+          ) : (
+            <div className="flex items-end justify-center pb-8">
               <div className="text-center space-y-3">
                 <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto">
                   🌱
@@ -143,31 +246,54 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                   <p className="text-xs text-muted-foreground/50">Ask me about farms, produce, or seasonal recommendations</p>
                 </div>
               </div>
-            </div>}
+            </div>
+          )}
         </div>
 
         {/* Suggestion Chips */}
-        {messages.length === 0 && <div className="px-4 pb-3 flex-shrink-0">
+        {messages.length === 0 && (
+          <div className="px-4 pb-3 flex-shrink-0">
             <div className="flex flex-wrap gap-2 justify-center">
-              {predefinedSuggestions.slice(0, 3).map((suggestion, index) => <button key={index} onClick={() => setInput(suggestion)} className="px-3 py-1.5 text-xs bg-green-50 hover:bg-green-100 text-green-700 rounded-full border border-green-200 transition-colors">
+              {predefinedSuggestions.slice(0, 3).map((suggestion, index) => (
+                <button 
+                  key={index} 
+                  onClick={() => handleSuggestionClick(suggestion)}
+                  className="px-3 py-1.5 text-xs bg-green-50 hover:bg-green-100 text-green-700 rounded-full border border-green-200 transition-colors"
+                >
                   {suggestion}
-                </button>)}
+                </button>
+              ))}
             </div>
-          </div>}
+          </div>
+        )}
 
         {/* Input Area */}
         <div className="flex-shrink-0 p-4 bg-gradient-to-b from-green-50/30 to-green-100/50 backdrop-blur-sm border-t border-green-100">
           <div className="relative max-w-2xl mx-auto">
             <div className="flex items-center gap-3 bg-white border border-green-200/60 rounded-full px-5 py-3 shadow-lg focus-within:shadow-xl focus-within:border-green-300 transition-all duration-200">
               <MessageCircle className="w-4 h-4 text-green-600 flex-shrink-0" />
-              <Input type="text" placeholder="Message your farm assistant..." value={input} onChange={e => setInput(e.target.value)} onKeyPress={handleKeyPress} className="border-0 bg-transparent p-0 text-sm placeholder:text-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 flex-1" disabled={isProcessing} />
-              <Button onClick={handleSend} disabled={!input.trim() || isProcessing} size="sm" className="rounded-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-md hover:shadow-lg px-4 py-2 h-9 transition-all duration-200">
+              <Input 
+                type="text" 
+                placeholder="Message your farm assistant..." 
+                value={input} 
+                onChange={e => setInput(e.target.value)}
+                onKeyPress={handleKeyPress}
+                className="border-0 bg-transparent p-0 text-sm placeholder:text-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 flex-1" 
+                disabled={isProcessing}
+              />
+              <Button 
+                onClick={handleSend} 
+                disabled={!input.trim() || isProcessing} 
+                size="sm" 
+                className="rounded-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-md hover:shadow-lg px-4 py-2 h-9 transition-all duration-200"
+              >
                 <Send className="w-4 h-4" />
               </Button>
             </div>
           </div>
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
 export default ChatInterface;
