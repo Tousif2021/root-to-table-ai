@@ -11,6 +11,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { useCart } from '@/contexts/CartContext';
 import FarmerChat from '@/components/FarmerChat';
 import SustainabilityMetrics from '@/components/SustainabilityMetrics';
 import ProductCatalog from '@/components/ProductCatalog';
@@ -32,7 +33,7 @@ interface CartItem {
 
 const FarmOrder = () => {
   const { farmName } = useParams<{ farmName: string }>();
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const { cartItems, addToCart, updateQuantity, removeFromCart, getCartItemQuantity } = useCart();
   const [showOrderConfirmation, setShowOrderConfirmation] = useState(false);
   const [selectedDeliveryOption, setSelectedDeliveryOption] = useState<any>(null);
 
@@ -72,34 +73,6 @@ const FarmOrder = () => {
     }] : [])
   ];
 
-  const handleAddToCart = (product: any) => {
-    setCartItems(prev => {
-      const existing = prev.find(item => item.id === product.id);
-      if (existing) {
-        return prev.map(item =>
-          item.id === product.id 
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      return [...prev, { ...product, quantity: 1 }];
-    });
-    toast.success(`Added ${product.name} to cart`);
-  };
-
-  const handleUpdateQuantity = (productId: string, quantity: number) => {
-    setCartItems(prev =>
-      prev.map(item =>
-        item.id === productId ? { ...item, quantity } : item
-      )
-    );
-  };
-
-  const handleRemoveFromCart = (productId: string) => {
-    setCartItems(prev => prev.filter(item => item.id !== productId));
-    toast.success('Item removed from cart');
-  };
-
   const handleCheckout = (deliveryOption?: any) => {
     if (cartItems.length === 0) {
       toast.error('Your cart is empty');
@@ -112,7 +85,6 @@ const FarmOrder = () => {
 
   const handleOrderConfirmationClose = () => {
     setShowOrderConfirmation(false);
-    setCartItems([]); // Clear cart after order confirmation
     setSelectedDeliveryOption(null);
   };
 
@@ -228,20 +200,11 @@ const FarmOrder = () => {
             <SustainabilityMetrics data={sustainabilityData} />
             
             {/* Product Catalog */}
-            <ProductCatalog
-              farm={farm}
-              cartItems={cartItems}
-              onAddToCart={handleAddToCart}
-              onUpdateQuantity={handleUpdateQuantity}
-              onRemoveFromCart={handleRemoveFromCart}
-            />
+            <ProductCatalog farm={farm} />
             
             {/* Mini Cart */}
             <MiniCart
-              cartItems={cartItems}
               deliveryOptions={deliveryOptions}
-              onUpdateQuantity={handleUpdateQuantity}
-              onRemoveFromCart={handleRemoveFromCart}
               onCheckout={handleCheckout}
             />
           </div>

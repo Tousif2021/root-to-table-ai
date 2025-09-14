@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Menu, X, Home, Store, ShoppingCart, User } from 'lucide-react';
+import { Menu, X, Home, Store, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLocation, Link } from 'react-router-dom';
+import CartBadge from '@/components/CartBadge';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -11,7 +12,6 @@ const Navbar = () => {
   const navItems = [
     { name: 'Home', path: '/', icon: Home },
     { name: 'Shop', path: '/farms', icon: Store },
-    { name: 'Cart', path: '/cart', icon: ShoppingCart },
     { name: 'Profile', path: '/profile', icon: User },
   ];
 
@@ -29,39 +29,45 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1 bg-muted/50 rounded-full p-1 backdrop-blur-sm border border-border/30">
-            {navItems.map((item) => (
-              <Link key={item.name} to={item.path} className="relative">
-                <motion.div
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors relative z-10 ${
-                    isActive(item.path)
-                      ? 'text-primary-foreground'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {item.name}
-                  {isActive(item.path) && (
-                    <motion.div
-                      layoutId="navbar-indicator"
-                      className="absolute inset-0 bg-primary rounded-full shadow-lg"
-                      style={{ zIndex: -1 }}
-                      initial={false}
-                      transition={{
-                        type: "spring",
-                        stiffness: 400,
-                        damping: 30
-                      }}
-                    />
-                  )}
-                </motion.div>
-              </Link>
-            ))}
+          <div className="hidden md:flex items-center gap-6">
+            <div className="flex items-center space-x-1 bg-muted/50 rounded-full p-1 backdrop-blur-sm border border-border/30">
+              {navItems.map((item) => (
+                <Link key={item.name} to={item.path} className="relative">
+                  <motion.div
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors relative z-10 ${
+                      isActive(item.path)
+                        ? 'text-primary-foreground'
+                        : 'text-muted-foreground hover:text-foreground'
+                    }`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {item.name}
+                    {isActive(item.path) && (
+                      <motion.div
+                        layoutId="navbar-indicator"
+                        className="absolute inset-0 bg-primary rounded-full shadow-lg"
+                        style={{ zIndex: -1 }}
+                        initial={false}
+                        transition={{
+                          type: "spring",
+                          stiffness: 400,
+                          damping: 30
+                        }}
+                      />
+                    )}
+                  </motion.div>
+                </Link>
+              ))}
+            </div>
+            
+            {/* Cart Badge - Far Right */}
+            <CartBadge />
           </div>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden">
+          {/* Mobile Navigation */}
+          <div className="md:hidden flex items-center gap-2">
+            <CartBadge />
             <Button
               variant="ghost"
               size="sm"

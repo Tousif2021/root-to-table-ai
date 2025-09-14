@@ -4,36 +4,14 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Plus, Minus, Leaf, AlertCircle } from 'lucide-react';
 import { Farm } from '@/types/farm';
-
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  unit: string;
-  quantity: number;
-  organic: boolean;
-  farmName: string;
-}
+import { useCart, CartItem } from '@/contexts/CartContext';
 
 interface ProductCatalogProps {
   farm: Farm;
-  cartItems: CartItem[];
-  onAddToCart: (product: any) => void;
-  onUpdateQuantity: (productId: string, quantity: number) => void;
-  onRemoveFromCart: (productId: string) => void;
 }
 
-const ProductCatalog: React.FC<ProductCatalogProps> = ({
-  farm,
-  cartItems,
-  onAddToCart,
-  onUpdateQuantity,
-  onRemoveFromCart,
-}) => {
-  const getCartItemQuantity = (productType: string) => {
-    const item = cartItems.find(item => item.name === productType);
-    return item ? item.quantity : 0;
-  };
+const ProductCatalog: React.FC<ProductCatalogProps> = ({ farm }) => {
+  const { addToCart, updateQuantity, removeFromCart, getCartItemQuantity } = useCart();
 
   return (
     <Card className="shadow-medium">
@@ -45,8 +23,8 @@ const ProductCatalog: React.FC<ProductCatalogProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {farm.produce.map((product, index) => {
-            const cartQuantity = getCartItemQuantity(product.type);
             const productId = `${farm.id}-${product.type}`;
+            const cartQuantity = getCartItemQuantity(productId);
 
             return (
               <Card 
@@ -87,7 +65,7 @@ const ProductCatalog: React.FC<ProductCatalogProps> = ({
                     <div className="flex items-center justify-between">
                       {cartQuantity === 0 ? (
                         <Button
-                          onClick={() => onAddToCart({
+                          onClick={() => addToCart({
                             id: productId,
                             name: product.type,
                             price: product.price,
@@ -109,8 +87,8 @@ const ProductCatalog: React.FC<ProductCatalogProps> = ({
                               size="sm"
                               onClick={() => 
                                 cartQuantity === 1 
-                                  ? onRemoveFromCart(productId)
-                                  : onUpdateQuantity(productId, cartQuantity - 1)
+                                  ? removeFromCart(productId)
+                                  : updateQuantity(productId, cartQuantity - 1)
                               }
                               className="h-8 w-8 p-0 hover:bg-muted"
                             >
@@ -122,7 +100,7 @@ const ProductCatalog: React.FC<ProductCatalogProps> = ({
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => onUpdateQuantity(productId, cartQuantity + 1)}
+                              onClick={() => updateQuantity(productId, cartQuantity + 1)}
                               className="h-8 w-8 p-0 hover:bg-muted"
                             >
                               <Plus className="w-3 h-3" />
